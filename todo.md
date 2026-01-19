@@ -81,3 +81,23 @@
 - [x] Creare router tRPC chat.sendMessage per AI
 - [x] Aggiornare ImageAnalysisModal e HistoricalImportModal
 - [x] Testare funzionamento app senza errori Gemini
+
+## Autenticazione e Ruoli (IN PROGRESS)
+- [ ] Configurare OAuth Manus nel frontend
+- [ ] Aggiungere pulsante Login/Logout nella navbar
+- [ ] Implementare auto-assegnazione ruolo admin per 4 Gmail
+- [ ] Testare login e assegnazione ruoli
+
+## Migrazione Database
+- [ ] Aggiornare schema structures per includere userId e sharedWith
+- [ ] Creare router tRPC per CRUD strutture con visibilità
+- [ ] Rimuovere dati mock-up da portfolioStore
+- [ ] Sostituire Zustand con tRPC nel frontend
+- [ ] Implementare caricamento strutture da database
+
+## Sistema Condivisione
+- [ ] Aggiungere campo sharedWith in tabella structures
+- [ ] Implementare procedure shareStructure nel backend
+- [ ] Creare UI dropdown per selezionare admin
+- [ ] Implementare logica visibilità (user vede proprie + admin, admin vede proprie + altri admin)
+- [ ] Testare condivisione tra utenti e admin

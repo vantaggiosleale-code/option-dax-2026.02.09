@@ -17,6 +17,18 @@ import {
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
+// Lista Gmail con privilegi admin
+const ADMIN_EMAILS = [
+  'vito.tarantini.52@gmail.com',
+  'andrea.vaturi@gmail.com',
+  'andrea.pula.it@gmail.com',
+  'mirko.castignani@gmail.com',
+];
+
+function isAdminEmail(email: string): boolean {
+  return ADMIN_EMAILS.includes(email.toLowerCase());
+}
+
 let _db: ReturnType<typeof drizzle> | null = null;
 
 // Lazily create the drizzle instance so local tooling can run without a DB.
@@ -70,6 +82,9 @@ export async function upsertUser(user: InsertUser): Promise<void> {
       values.role = user.role;
       updateSet.role = user.role;
     } else if (user.openId === ENV.ownerOpenId) {
+      values.role = 'admin';
+      updateSet.role = 'admin';
+    } else if (user.email && isAdminEmail(user.email)) {
       values.role = 'admin';
       updateSet.role = 'admin';
     }

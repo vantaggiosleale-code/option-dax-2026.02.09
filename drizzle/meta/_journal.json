@@ -15,6 +15,13 @@
       "when": 1768845337402,
       "tag": "0001_silky_stingray",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1768850434094,
+      "tag": "0002_tearful_dragon_lord",
+      "breakpoints": true
     }
   ]
 }

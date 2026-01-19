@@ -131,3 +131,37 @@ export const uploadedFiles = mysqlTable("uploaded_files", {
 
 export type UploadedFile = typeof uploadedFiles.$inferSelect;
 export type InsertUploadedFile = typeof uploadedFiles.$inferInsert;
+
+/**
+ * Structures table - stores Option DAX trading structures (active and closed)
+ * This is the main table for the app, replacing the Zustand portfolioStore
+ */
+export const structures = mysqlTable("structures", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  tag: varchar("tag", { length: 100 }).notNull(), // e.g., "BPS5", "STG7"
+  legsPerContract: int("legsPerContract").notNull().default(2), // 2 gambe/e
+  legs: text("legs").notNull(), // JSON string of OptionLeg[]
+  status: mysqlEnum("status", ["active", "closed"]).default("active").notNull(),
+  
+  // Greeks and P/L (stored as strings to preserve precision)
+  openPnl: varchar("openPnl", { length: 50 }),
+  pdc: varchar("pdc", { length: 50 }), // Point de Carico
+  delta: varchar("delta", { length: 50 }),
+  gamma: varchar("gamma", { length: 50 }),
+  theta: varchar("theta", { length: 50 }),
+  vega: varchar("vega", { length: 50 }),
+  
+  // For closed structures
+  closingDate: varchar("closingDate", { length: 50 }), // e.g., "2023-08-16"
+  realizedPnl: varchar("realizedPnl", { length: 50 }),
+  
+  // Sharing with admins
+  sharedWith: text("sharedWith"), // JSON array of admin user IDs, e.g., "[1, 3, 5]"
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Structure = typeof structures.$inferSelect;
+export type InsertStructure = typeof structures.$inferInsert;
