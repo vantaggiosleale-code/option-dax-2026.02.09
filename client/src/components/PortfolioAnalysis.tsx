@@ -56,10 +56,10 @@ const extractStrategyType = (tag: string): string => {
 
 const MetricCard = ({ icon, title, value, colorClass = 'text-white' }: { icon: React.ReactNode, title: string, value: string, colorClass?: string }) => (
     <div className="bg-gray-700/50 p-4 rounded-lg flex items-start">
-        <div className="p-2 bg-gray-600/50 rounded-md mr-4 text-gray-400">{icon}</div>
-        <div>
-            <p className="text-sm text-gray-400 font-medium">{title}</p>
-            <p className={`text-xl font-bold font-mono ${colorClass}`}>{value}</p>
+        <div className="p-2 bg-gray-600/50 rounded-md mr-3 flex-shrink-0 text-gray-400">{icon}</div>
+        <div className="min-w-0 flex-1">
+            <p className="text-sm text-gray-400 font-medium mb-1">{title}</p>
+            <p className={`text-base font-bold font-mono ${colorClass} break-words`}>{value}</p>
         </div>
     </div>
 );

@@ -245,3 +245,6 @@
 ## Bug Nuovi Segnalati
 - [x] BUG: Campo "Prezzo di apertura" torna indietro automaticamente dopo la modifica - RISOLTO: rimosso calcolo automatico IV
 - [x] BUG: Possibile conflitto tra slider volatilità e campi di testo che causa reset automatico valori - RISOLTO: rimosso calcolo automatico IV duplicato
+
+## Bug UI/UX
+- [x] BUG: Simbolo € esce fuori dal box nelle metriche (Vincita Media, Perdita Media, Max Drawdown) - RISOLTO: ridotto font size, aggiunto flex-wrap e break-words
