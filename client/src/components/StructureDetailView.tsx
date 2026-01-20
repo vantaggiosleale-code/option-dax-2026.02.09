@@ -38,6 +38,17 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
     const createMutation = trpc.optionStructures.create.useMutation();
     const { user } = useAuth();
     
+    // Mutation per toggle visibilità pubblica
+    const togglePublicMutation = trpc.optionStructures.togglePublic.useMutation({
+        onSuccess: (data, variables) => {
+            setLocalStructure(prev => prev ? { ...prev, isPublic: variables.isPublic ? 1 : 0 } : null);
+            toast.success(variables.isPublic ? 'Struttura resa pubblica' : 'Struttura resa privata');
+        },
+        onError: (error) => {
+            toast.error('Errore', { description: error.message });
+        }
+    });
+    
     // Ref per input uncontrolled
     const tagInputRef = useRef<HTMLInputElement>(null);
     
@@ -493,19 +504,13 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
                                         type="checkbox"
                                         checked={localStructure.isPublic === 1}
                                         onChange={(e) => {
-                                            const newValue = e.target.checked ? 1 : 0;
-                                            trpc.optionStructures.togglePublic.useMutation({
-                                                onSuccess: () => {
-                                                    setLocalStructure(prev => prev ? { ...prev, isPublic: newValue } : null);
-                                                    toast.success(newValue === 1 ? 'Struttura resa pubblica' : 'Struttura resa privata');
-                                                },
-                                                onError: (error) => {
-                                                    toast.error('Errore', { description: error.message });
-                                                }
-                                            }).mutate({ structureId: localStructure.id, isPublic: e.target.checked });
+                                            togglePublicMutation.mutate({ 
+                                                structureId: localStructure.id, 
+                                                isPublic: e.target.checked 
+                                            });
                                         }}
                                         className="sr-only peer"
-                                        disabled={isReadOnly}
+                                        disabled={isReadOnly || togglePublicMutation.isPending}
                                     />
                                     <div className="w-11 h-6 bg-gray-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-accent rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent"></div>
                                 </div>

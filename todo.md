@@ -266,3 +266,5 @@
 - [x] Aggiungere toggle "Pubblica/Privata" per admin nelle strutture
 - [ ] Filtrare lista strutture per mostrare solo proprie + pubbliche
 - [ ] Testare flusso: admin pubblica → utente importa → modifica copia indipendente
+
+- [x] 🔴 BUG: Toggle "Visibilità Pubblica" non risponde al click - RISOLTO: spostato useMutation al top level invece di dentro onChange
