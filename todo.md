@@ -152,3 +152,17 @@
 - [x] Implementare chiamata API Yahoo Finance per prezzo live (^GDAXI)
 - [x] Correggere chiamata frontend usando fetch diretto
 - [x] Testare che il pulsante aggiorni il prezzo correttamente (21885.79 → 24959.06)
+
+## Bug Campo Tag Struttura Non Permette Digitazione (IN PROGRESS)
+- [x] Verificare input Tag Struttura in StructureDetailView
+- [x] Aggiunto optional chaining value={localStructure?.tag || ''}
+- [x] Creato updateStructureField con callback form setState
+- [x] Verificato che input non è disabled
+- [x] Verificato che input può ricevere focus
+- [ ] Testare digitazione manuale da parte utente
+
+## Bug Link Torna alla Lista Non Funziona (COMPLETATO)
+- [x] Verificare link "Torna alla Lista" in StructureDetailView
+- [x] Passare setCurrentView come prop da App.tsx
+- [x] Correggere chiamata a props.setCurrentView('list')
+- [x] Testare che il link riporti alla lista

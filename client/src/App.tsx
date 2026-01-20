@@ -32,7 +32,7 @@ const App: React.FC = () => {
             case 'list':
                 return <StructureListView setCurrentView={handleSetCurrentView} />;
             case 'detail':
-                return <StructureDetailView structureId={currentStructureId} />;
+                return <StructureDetailView structureId={currentStructureId} setCurrentView={handleSetCurrentView} />;
             case 'settings':
                 return <SettingsView />;
             case 'analysis':

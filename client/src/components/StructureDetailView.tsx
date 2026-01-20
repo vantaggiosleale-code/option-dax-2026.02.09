@@ -25,9 +25,10 @@ const ReopenIcon = () => (
 
 interface StructureDetailViewProps {
     structureId: number | 'new' | null;
+    setCurrentView: (view: 'list' | 'detail' | 'settings' | 'analysis', structureId?: number | 'new' | null) => void;
 }
 
-const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId }) => {
+const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, setCurrentView }) => {
     const { structures, addStructure, updateStructure, deleteStructure, closeStructure, reopenStructure } = useStructures();
     
     // Market data gestito localmente
@@ -48,9 +49,7 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId }
         }
     };
     
-    const setCurrentView = (view: string, structureId?: number | 'new' | null) => {
-        console.log('Navigate to:', view, structureId);
-    };
+    // setCurrentView ora viene passata come prop da App.tsx
     const { settings } = useSettingsStore();
     const [localStructure, setLocalStructure] = useState<Omit<Structure, 'id' | 'status'> | Structure | null>(null);
     const [isReadOnly, setIsReadOnly] = useState(false);
@@ -72,6 +71,17 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId }
         }
         setLocalInputValues({}); // Reset local string inputs on structure change
     }, [structureId, structures, settings.defaultMultiplier]);
+    
+    // Helper per aggiornare campi di localStructure
+    const updateStructureField = <K extends keyof (Omit<Structure, 'id' | 'status'>)>(
+        field: K,
+        value: (Omit<Structure, 'id' | 'status'>)[K]
+    ) => {
+        setLocalStructure(prev => {
+            if (!prev) return prev;
+            return { ...prev, [field]: value };
+        });
+    };
     
     const handleLegChange = (id: number, field: keyof Omit<OptionLeg, 'id'>, value: string | number | null) => {
         if (!localStructure || isReadOnly) return;
@@ -355,6 +365,15 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId }
         return leg.optionType === 'Call' ? bs.callPrice() : bs.putPrice();
     };
 
+    // Controllo per evitare errori quando localStructure è null
+    if (!localStructure) {
+        return (
+            <div className="flex items-center justify-center h-64">
+                <div className="text-gray-400">Caricamento...</div>
+            </div>
+        );
+    }
+
     return (
         <div className="space-y-4">
             <div className="flex justify-between items-center">
@@ -402,8 +421,8 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId }
                             <input
                                 id="structure-tag"
                                 type="text"
-                                value={localStructure.tag}
-                                onChange={(e) => setLocalStructure({...localStructure, tag: e.target.value})}
+                                value={localStructure?.tag || ''}
+                                onChange={(e) => updateStructureField('tag', e.target.value)}
                                 className={`mt-1 bg-gray-700 border border-gray-600 rounded-md px-3 py-2 w-full text-white font-bold text-lg focus:ring-2 focus:ring-accent focus:border-accent outline-none ${disabledClass}`}
                                 disabled={isReadOnly}
                             />
@@ -413,7 +432,7 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId }
                             <select
                                 id="structure-multiplier"
                                 value={localStructure.multiplier}
-                                onChange={(e) => setLocalStructure({...localStructure, multiplier: parseInt(e.target.value) as 1 | 5 | 25})}
+                                onChange={(e) => updateStructureField('multiplier', parseInt(e.target.value) as 1 | 5 | 25)}
                                 className={`mt-1 bg-gray-700 border border-gray-600 rounded-md px-3 py-2 w-full text-white font-bold text-lg focus:ring-2 focus:ring-accent focus:border-accent outline-none ${disabledClass}`}
                                 disabled={isReadOnly}
                             >
