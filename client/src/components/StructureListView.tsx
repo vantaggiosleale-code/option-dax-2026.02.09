@@ -1,5 +1,5 @@
 
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { useStructures } from '../hooks/useStructures';
 import { Structure, MarketData, CalculatedGreeks, Settings } from '../types';
 import { BlackScholes, getTimeToExpiry } from '../services/blackScholes';
@@ -98,6 +98,11 @@ const StructureListView: React.FC<StructureListViewProps> = ({ setCurrentView })
 
     const activeStructures = structures.filter(s => s.status === 'active');
     const closedStructures = structures.filter(s => s.status === 'closed');
+
+    // Refresh automatico prezzo DAX al caricamento della pagina
+    useEffect(() => {
+        refreshDaxSpot();
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     const totalPortfolioGreeks = useMemo(() => {
         const initialGreeks = { delta: 0, gamma: 0, theta: 0, vega: 0 };

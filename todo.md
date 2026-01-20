@@ -238,3 +238,6 @@
 - [ ] BUG: Pulsante "Riapri per Modificare" non funziona nelle strutture chiuse
 - [ ] BUG: Schermata Analisi Portafoglio mostra valori errati (P/L, Delta, Gamma, Theta, Vega tutti a 0)
 - [ ] BUG: Quando chiudo tutte le strutture, l'Analisi Portafoglio mostra ancora P/L Aperto Totale = €0.00 invece di nessuna struttura attiva
+
+## Nuove Feature Richieste
+- [x] Refresh automatico prezzo DAX al caricamento pagina (invece di valore statico 21885.79) - COMPLETATO
