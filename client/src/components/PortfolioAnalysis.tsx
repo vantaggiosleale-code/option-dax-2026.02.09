@@ -64,11 +64,12 @@ const MetricCard = ({ icon, title, value, colorClass = 'text-white' }: { icon: R
     </div>
 );
 
-const PortfolioAnalysis: React.FC = () => {
+interface PortfolioAnalysisProps {
+    setCurrentView: (view: string) => void;
+}
+
+const PortfolioAnalysis: React.FC<PortfolioAnalysisProps> = ({ setCurrentView }) => {
     const { structures } = useStructures();
-    const setCurrentView = (view: string) => {
-        console.log('Navigate to:', view);
-    };
     const closedStructures = structures.filter(s => s.status === 'closed');
     const { initialCapital } = useSettingsStore(state => state.settings);
 

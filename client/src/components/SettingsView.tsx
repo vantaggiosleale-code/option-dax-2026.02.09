@@ -3,11 +3,12 @@ import useSettingsStore from '../store/settingsStore';
 // import { useStructures } from '../hooks/useStructures'; // Non necessario in SettingsView
 import { Settings } from '../types';
 
-const SettingsView: React.FC = () => {
+interface SettingsViewProps {
+    setCurrentView: (view: string) => void;
+}
+
+const SettingsView: React.FC<SettingsViewProps> = ({ setCurrentView }) => {
     const { settings, updateSettings } = useSettingsStore();
-    const setCurrentView = (view: string) => {
-        console.log('Navigate to:', view);
-    };
     const [localSettings, setLocalSettings] = useState<Settings>(settings);
     const [isSaved, setIsSaved] = useState(false);
 

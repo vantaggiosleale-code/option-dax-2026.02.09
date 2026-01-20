@@ -32,15 +32,18 @@ export const useMarketDataStore = create<MarketDataStore>((set, get) => ({
         body: JSON.stringify({})
       });
       const data = await response.json();
-      const price = data.result.data.json.price;
+      // Dopo aver disabilitato superjson, il formato è cambiato
+      const price = data.result?.data?.price || data.result?.data?.json?.price;
       console.log('Prezzo DAX aggiornato:', price);
       
-      set((state) => ({
-        marketData: {
-          ...state.marketData,
-          daxSpot: price
-        }
-      }));
+      if (price) {
+        set((state) => ({
+          marketData: {
+            ...state.marketData,
+            daxSpot: price
+          }
+        }));
+      }
     } catch (e) {
       console.error('Errore aggiornamento prezzo DAX:', e);
     } finally {

@@ -34,9 +34,9 @@ const App: React.FC = () => {
             case 'detail':
                 return <StructureDetailView structureId={currentStructureId} setCurrentView={handleSetCurrentView} />;
             case 'settings':
-                return <SettingsView />;
+                return <SettingsView setCurrentView={handleSetCurrentView} />;
             case 'analysis':
-                return <PortfolioAnalysis />;
+                return <PortfolioAnalysis setCurrentView={handleSetCurrentView} />;
             default:
                 return <StructureListView setCurrentView={handleSetCurrentView} />;
         }

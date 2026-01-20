@@ -213,3 +213,12 @@
 - [ ] Implementare logica condivisione con chiamata tRPC share
 - [ ] Implementare logica rimozione condivisione con chiamata tRPC unshare
 - [ ] Testare condivisione tra utenti e admin end-to-end
+
+## Bug Salvataggio Strutture - TRPCClientError (RISOLTO)
+- [x] Risolvere errore "Unable to transform response from server" durante salvataggio
+- [x] Disabilitato superjson sia sul server che sul client
+- [x] Testato che il salvataggio funzioni correttamente
+
+## Bug Pulsanti Non Funzionano (RISOLTO)
+- [x] BUG: Pulsante nuvoletta (aggiorna prezzo DAX) non funziona - fixato formato risposta JSON
+- [x] BUG: Pulsanti "Torna alla Lista" non funzionano in PortfolioAnalysis e SettingsView - passata prop setCurrentView

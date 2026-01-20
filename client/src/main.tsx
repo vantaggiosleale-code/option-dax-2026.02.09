@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { httpBatchLink } from '@trpc/client';
-import superjson from 'superjson';
+// import superjson from 'superjson'; // DISABILITATO
 import { trpc } from './lib/trpc';
 import App from './App';
 
@@ -22,7 +22,7 @@ function Root() {
           url: '/api/trpc',
         }),
       ],
-      transformer: superjson,
+      // transformer: superjson, // DISABILITATO
     })
   );
 

@@ -168,12 +168,38 @@ export const optionStructuresRouter = router({
       };
 
       const [result] = await db.insert(structures).values(newStructure);
-      console.log("[optionStructures.create] Inserting structure:", JSON.stringify(newStructure, null, 2));
-      console.log("[optionStructures.create] Insert completed, result:", result);
-
+      console.log("[optionStructures.create] Insert completed, insertId:", result.insertId);
+      
+      // Recupera la struttura appena creata dal database
+      const [createdStructure] = await db
+        .select()
+        .from(structures)
+        .where(eq(structures.id, result.insertId));
+      
+      if (!createdStructure) {
+        throw new Error('Failed to retrieve created structure');
+      }
+      
+      console.log("[optionStructures.create] Returning created structure:", createdStructure.id);
+      
+      // Restituisci la struttura completa come fa list()
       return {
-        success: true,
-        id: result.insertId,
+        id: createdStructure.id,
+        userId: createdStructure.userId,
+        tag: createdStructure.tag,
+        multiplier: createdStructure.multiplier,
+        legsPerContract: createdStructure.legsPerContract,
+        legs: JSON.parse(createdStructure.legs),
+        status: createdStructure.status,
+        openPnl: createdStructure.openPnl,
+        pdc: createdStructure.pdc,
+        delta: createdStructure.delta,
+        gamma: createdStructure.gamma,
+        theta: createdStructure.theta,
+        vega: createdStructure.vega,
+        closingDate: createdStructure.closingDate,
+        realizedPnl: createdStructure.realizedPnl,
+        sharedWith: createdStructure.sharedWith ? createdStructure.sharedWith.split(',') : [],
       };
     }),
 
