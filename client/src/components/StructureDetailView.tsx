@@ -64,16 +64,17 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
             setLocalStructure({
                 tag: '',
                 legs: [],
-                multiplier: settings.defaultMultiplier,
+                multiplier: 5, // Default multiplier
             });
             setIsReadOnly(false);
-        } else {
+        } else if (structureId) {
             const structure = structures.find(s => s.id === structureId);
             setLocalStructure(structure || null);
             setIsReadOnly(structure?.status === 'Closed');
         }
         setLocalInputValues({}); // Reset local string inputs on structure change
-    }, [structureId, structures, settings.defaultMultiplier]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [structureId]);
     
     // Helper per aggiornare campi di localStructure
     const updateStructureField = <K extends keyof (Omit<Structure, 'id' | 'status'>)>(
@@ -614,7 +615,7 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
                      )}
                 </div>
                 <div className="lg:col-span-2 bg-gray-800 rounded-lg p-4 flex flex-col space-y-4">
-                    <div className="flex-grow h-[500px]">
+                    <div className="flex-grow h-[500px] pointer-events-none">
                         <PayoffChart legs={localStructure.legs} marketData={marketData} multiplier={localStructure.multiplier} />
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

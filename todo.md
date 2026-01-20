@@ -169,3 +169,9 @@
 - [x] Passare setCurrentView come prop da App.tsx
 - [x] Correggere chiamata a props.setCurrentView('list')
 - [x] Testare che il link riporti alla lista
+
+## Bug Pulsante Aggiungi Gamba Non Funziona (URGENT)
+- [ ] Verificare funzione addLeg in StructureDetailView
+- [ ] Verificare handler onClick del pulsante Aggiungi Gamba
+- [ ] Correggere logica se mancante o errata
+- [ ] Testare che il pulsante aggiunga una nuova gamba alla struttura

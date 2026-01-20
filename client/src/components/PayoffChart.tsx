@@ -58,7 +58,7 @@ const PayoffChart: React.FC<PayoffChartProps> = ({ legs, marketData, multiplier 
         const buffer = Math.max(strategyWidth * 0.5, marketData.daxSpot * 0.05); 
 
         return [minStrike - buffer, maxStrike + buffer];
-    }, [legs, marketData.daxSpot]);
+    }, [legs.length, marketData.daxSpot]);
 
     const [xDomain, setXDomain] = useState<[number, number]>(initialXDomain);
 
@@ -214,7 +214,7 @@ const PayoffChart: React.FC<PayoffChartProps> = ({ legs, marketData, multiplier 
 
   return (
     <div className="relative w-full h-full">
-        <div className="absolute top-0 right-0 z-10 flex flex-col items-end">
+        <div className="absolute top-0 right-0 z-10 flex flex-col items-end pointer-events-auto">
             <button
                 onClick={() => setXDomain(initialXDomain)}
                 className="bg-gray-700 hover:bg-gray-600 text-gray-300 px-2 py-1 text-xs rounded-bl-md"
