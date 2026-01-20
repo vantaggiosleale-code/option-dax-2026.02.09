@@ -13,6 +13,7 @@ export function useStructures() {
   const createMutation = trpc.optionStructures.create.useMutation();
   const updateMutation = trpc.optionStructures.update.useMutation();
   const deleteMutation = trpc.optionStructures.delete.useMutation();
+  const closeMutation = trpc.optionStructures.close.useMutation();
   const shareMutation = trpc.optionStructures.share.useMutation();
 
   const utils = trpc.useUtils();
@@ -101,10 +102,18 @@ export function useStructures() {
   };
 
   // Chiudi struttura
-  // TODO: Implementare procedure close nel router optionStructures
   const closeStructure = async (structureId: number, daxSpot: number, riskFreeRate: number) => {
-    console.warn('closeStructure non implementata - procedure close non esiste nel router');
-    throw new Error('Funzionalità non ancora implementata');
+    try {
+      await closeMutation.mutateAsync({
+        id: structureId,
+        daxSpot,
+        riskFreeRate,
+      });
+      refetch();
+    } catch (error) {
+      console.error('Errore durante la chiusura della struttura:', error);
+      throw error;
+    }
   };
 
   // Riapri struttura

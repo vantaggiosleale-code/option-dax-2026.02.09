@@ -392,6 +392,87 @@ export const optionStructuresRouter = router({
     }),
 
   /**
+   * Close structure (mark as closed with realized P&L)
+   */
+  close: protectedProcedure
+    .input(
+      z.object({
+        id: z.number(),
+        daxSpot: z.number(),
+        riskFreeRate: z.number(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new Error('Database not available');
+
+      // Check ownership
+      const [structure] = await db
+        .select()
+        .from(structures)
+        .where(eq(structures.id, input.id))
+        .limit(1);
+
+      if (!structure) {
+        throw new Error('Structure not found');
+      }
+
+      if (structure.userId !== ctx.user.id) {
+        throw new Error('Access denied: You can only close your own structures');
+      }
+
+      if (structure.status === 'closed') {
+        throw new Error('Structure is already closed');
+      }
+
+      // Parse legs
+      const legs = JSON.parse(structure.legs);
+
+      // Calculate realized P&L by closing all legs at current market prices
+      // For simplicity, use current theoretical value as closing price
+      const closingDate = new Date().toISOString();
+      let realizedPnl = 0;
+
+      const updatedLegs = legs.map((leg: any) => {
+        // Calculate theoretical price using Black-Scholes
+        const timeToExpiry = (new Date(leg.expiryDate).getTime() - Date.now()) / (365.25 * 24 * 60 * 60 * 1000);
+        const d1 = (Math.log(input.daxSpot / leg.strike) + (input.riskFreeRate + 0.5 * leg.impliedVolatility ** 2) * timeToExpiry) / (leg.impliedVolatility * Math.sqrt(timeToExpiry));
+        const d2 = d1 - leg.impliedVolatility * Math.sqrt(timeToExpiry);
+        const normCdf = (x: number) => 0.5 * (1 + Math.erf(x / Math.sqrt(2)));
+        
+        let theoreticalPrice;
+        if (leg.optionType === 'call') {
+          theoreticalPrice = input.daxSpot * normCdf(d1) - leg.strike * Math.exp(-input.riskFreeRate * timeToExpiry) * normCdf(d2);
+        } else {
+          theoreticalPrice = leg.strike * Math.exp(-input.riskFreeRate * timeToExpiry) * normCdf(-d2) - input.daxSpot * normCdf(-d1);
+        }
+
+        // Calculate P&L for this leg
+        const legPnl = (theoreticalPrice - leg.tradePrice) * leg.quantity * structure.multiplier - leg.openingCommission - leg.closingCommission;
+        realizedPnl += legPnl;
+
+        return {
+          ...leg,
+          closingPrice: theoreticalPrice,
+          closingDate,
+        };
+      });
+
+      // Update structure
+      await db
+        .update(structures)
+        .set({
+          status: 'closed',
+          legs: JSON.stringify(updatedLegs),
+          closingDate,
+          realizedPnl: realizedPnl.toFixed(2),
+        })
+        .where(eq(structures.id, input.id));
+
+      return { success: true, realizedPnl };
+    }),
+
+  /**
    * Get list of admins for sharing dropdown
    */
   getAdmins: protectedProcedure.query(async ({ ctx }) => {

@@ -222,3 +222,6 @@
 ## Bug Pulsanti Non Funzionano (RISOLTO)
 - [x] BUG: Pulsante nuvoletta (aggiorna prezzo DAX) non funziona - fixato formato risposta JSON
 - [x] BUG: Pulsanti "Torna alla Lista" non funzionano in PortfolioAnalysis e SettingsView - passata prop setCurrentView
+
+## Bug Pulsante Chiudi Struttura (RISOLTO)
+- [x] BUG: Pulsante "Chiudi Struttura" non funziona in StructureDetailView - implementata procedure close nel router
