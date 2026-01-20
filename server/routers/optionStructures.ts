@@ -144,6 +144,8 @@ export const optionStructuresRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      console.log("[optionStructures.create] START - User:", ctx.user.id, "Tag:", input.tag);
+      console.log("[optionStructures.create] Input:", JSON.stringify(input, null, 2));
       const db = await getDb();
       if (!db) throw new Error('Database not available');
 
@@ -166,6 +168,8 @@ export const optionStructuresRouter = router({
       };
 
       const [result] = await db.insert(structures).values(newStructure);
+      console.log("[optionStructures.create] Inserting structure:", JSON.stringify(newStructure, null, 2));
+      console.log("[optionStructures.create] Insert completed, result:", result);
 
       return {
         success: true,

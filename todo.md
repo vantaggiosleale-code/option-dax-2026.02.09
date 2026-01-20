@@ -188,12 +188,13 @@
 - [x] Creato store globale Zustand (useMarketDataStore)
 - [x] Implementato salvataggio prezzo nello store globale
 - [x] Far leggere il prezzo dallo store in tutte le pagine
-- [x] Testato che il prezzo persista quando cambi pagina e torni indiet## Bug Nuove Strutture Non Vengono Salvate (IN CORSO - PARZIALMENTE RISOLTO)CORSO - PARZIALMENTE RISOLTO)
+- [x] Testato che il prezzo persista quando cambi pagina e torni indiet## Bug Nuove Strutture Non Vengono Salvate (IN CORSO - RICHIEDE RICREAZIONE ROUTER)
 - [x] Aggiunto campo multiplier allo schema database e router tRPC
 - [x] Ricreato tabella structures con schema corretto (18 colonne)
 - [x] Aggiunto import z da zod nel router optionStructures
 - [x] Fixato mismatch uppercase/lowercase tra frontend e backend (Active/Closed → active/closed)
-- [x] Disabilitato batching tRPC per semplificare debugging
+- [x] Abilitato batching tRPC su client e server
 - [x] Rimosso mutation inesistenti (closeMutation, reopenMutation) da useStructures
-- [ ] Debuggare perché la mutation create non salva nel database (fallisce silenziosamente)
+- [x] Pulita cache di Vite per forzare reload del codice
+- [ ] Ricreare router optionStructures da zero copiando struttura da router funzionante
 - [ ] Testare che le nuove strutture vengano salvate e ricaricate
