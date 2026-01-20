@@ -69,7 +69,7 @@ const PortfolioAnalysis: React.FC = () => {
     const setCurrentView = (view: string) => {
         console.log('Navigate to:', view);
     };
-    const closedStructures = structures.filter(s => s.status === 'Closed');
+    const closedStructures = structures.filter(s => s.status === 'closed');
     const { initialCapital } = useSettingsStore(state => state.settings);
 
     const equityChartData = useMemo(() => {

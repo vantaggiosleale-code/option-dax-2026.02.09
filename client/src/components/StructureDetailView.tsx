@@ -4,6 +4,7 @@ import { OptionLeg, MarketData, Structure, CalculatedGreeks } from '../types';
 import { BlackScholes, getTimeToExpiry, calculateImpliedVolatility } from '../services/blackScholes';
 import { useStructures } from '../hooks/useStructures';
 import useSettingsStore from '../store/settingsStore';
+import { useMarketDataStore } from '../stores/marketDataStore';
 import PayoffChart from './PayoffChart';
 import { PlusIcon, TrashIcon, CalculatorIcon, CloudDownloadIcon } from './icons';
 import ExpiryDateSelector, { findThirdFridayOfMonth } from './ExpiryDateSelector';
@@ -34,23 +35,8 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
     // Ref per input uncontrolled
     const tagInputRef = useRef<HTMLInputElement>(null);
     
-    // Market data gestito localmente
-    const [marketData, setMarketData] = useState<MarketData>({
-        daxSpot: 21885.79,
-        riskFreeRate: 2.61,
-    });
-    const [isLoadingSpot, setIsLoadingSpot] = useState(false);
-    
-    const refreshDaxSpot = async () => {
-        setIsLoadingSpot(true);
-        try {
-            console.log('Refresh DAX spot non ancora implementato');
-        } catch (e) {
-            console.error(e);
-        } finally {
-            setIsLoadingSpot(false);
-        }
-    };
+    // Market data gestito con store globale Zustand
+    const { marketData, setMarketData, refreshDaxSpot, isLoadingSpot } = useMarketDataStore();
     
     // setCurrentView ora viene passata come prop da App.tsx
     const { settings } = useSettingsStore();
@@ -70,7 +56,7 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
         } else if (structureId) {
             const structure = structures.find(s => s.id === structureId);
             setLocalStructure(structure || null);
-            setIsReadOnly(structure?.status === 'Closed');
+            setIsReadOnly(structure?.status === 'closed');
         }
         setLocalInputValues({}); // Reset local string inputs on structure change
     // eslint-disable-next-line react-hooks/exhaustive-deps

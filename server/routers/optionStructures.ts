@@ -17,7 +17,7 @@ export const optionStructuresRouter = router({
   list: protectedProcedure
     .input(
       z.object({
-        status: z.enum(['active', 'closed', 'all']).optional().default('all'),
+        status: z.enum(['active', 'closed', 'all']).default('all'),
       })
     )
     .query(async ({ ctx, input }) => {
@@ -129,6 +129,7 @@ export const optionStructuresRouter = router({
     .input(
       z.object({
         tag: z.string(),
+        multiplier: z.number().default(5),
         legsPerContract: z.number().default(2),
         legs: z.array(z.any()), // OptionLeg[]
         status: z.enum(['active', 'closed']).default('active'),
@@ -149,6 +150,7 @@ export const optionStructuresRouter = router({
       const newStructure: InsertStructure = {
         userId: ctx.user.id,
         tag: input.tag,
+        multiplier: input.multiplier,
         legsPerContract: input.legsPerContract,
         legs: JSON.stringify(input.legs),
         status: input.status,
@@ -179,6 +181,7 @@ export const optionStructuresRouter = router({
       z.object({
         id: z.number(),
         tag: z.string().optional(),
+        multiplier: z.number().optional(),
         legsPerContract: z.number().optional(),
         legs: z.array(z.any()).optional(),
         status: z.enum(['active', 'closed']).optional(),
@@ -213,6 +216,7 @@ export const optionStructuresRouter = router({
 
       const updates: Partial<InsertStructure> = {};
       if (input.tag !== undefined) updates.tag = input.tag;
+      if (input.multiplier !== undefined) updates.multiplier = input.multiplier;
       if (input.legsPerContract !== undefined) updates.legsPerContract = input.legsPerContract;
       if (input.legs !== undefined) updates.legs = JSON.stringify(input.legs);
       if (input.status !== undefined) updates.status = input.status;

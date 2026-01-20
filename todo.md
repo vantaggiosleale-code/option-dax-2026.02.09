@@ -170,8 +170,30 @@
 - [x] Correggere chiamata a props.setCurrentView('list')
 - [x] Testare che il link riporti alla lista
 
-## Bug Pulsante Aggiungi Gamba Non Funziona (URGENT)
-- [ ] Verificare funzione addLeg in StructureDetailView
-- [ ] Verificare handler onClick del pulsante Aggiungi Gamba
-- [ ] Correggere logica se mancante o errata
-- [ ] Testare che il pulsante aggiunga una nuova gamba alla struttura
+## Bug Pulsante Aggiungi Gamba Non Funziona (COMPLETATO)
+- [x] Verificare funzione addLeg in StructureDetailView
+- [x] Identificato loop infinito di re-rendering che bloccava eventi click
+- [x] Fixato PayoffChart: useMemo con legs.length invece di legs
+- [x] Fixato StructureDetailView: rimosso structures dalle dipendenze useEffect
+- [x] Aggiunto pointer-events: none al wrapper PayoffChart
+- [x] Testato che il pulsante aggiunga una nuova gamba alla struttura
+
+## Bug Pulsante Aggiornamento Prezzo DAX Non Funziona nelle Pagine Interne (COMPLETATO)
+- [x] Creato store globale useMarketDataStore per condividere prezzo DAX
+- [x] Sostituito stato locale con store globale in StructureListView e StructureDetailView
+- [x] Implementato refreshDaxSpot in StructureDetailView
+- [x] Testato che il pulsante aggiorni il prezzo in tutte le pagine
+
+## Bug Prezzo DAX Non Persiste Tra Cambio Pagina (COMPLETATO)
+- [x] Creato store globale Zustand (useMarketDataStore)
+- [x] Implementato salvataggio prezzo nello store globale
+- [x] Far leggere il prezzo dallo store in tutte le pagine
+- [x] Testato che il prezzo persista quando cambi pagina e torni indiet## Bug Nuove Strutture Non Vengono Salvate (IN CORSO - PARZIALMENTE RISOLTO)CORSO - PARZIALMENTE RISOLTO)
+- [x] Aggiunto campo multiplier allo schema database e router tRPC
+- [x] Ricreato tabella structures con schema corretto (18 colonne)
+- [x] Aggiunto import z da zod nel router optionStructures
+- [x] Fixato mismatch uppercase/lowercase tra frontend e backend (Active/Closed → active/closed)
+- [x] Disabilitato batching tRPC per semplificare debugging
+- [x] Rimosso mutation inesistenti (closeMutation, reopenMutation) da useStructures
+- [ ] Debuggare perché la mutation create non salva nel database (fallisce silenziosamente)
+- [ ] Testare che le nuove strutture vengano salvate e ricaricate

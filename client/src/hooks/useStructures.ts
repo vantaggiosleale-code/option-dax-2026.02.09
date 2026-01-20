@@ -13,9 +13,7 @@ export function useStructures() {
   const createMutation = trpc.optionStructures.create.useMutation();
   const updateMutation = trpc.optionStructures.update.useMutation();
   const deleteMutation = trpc.optionStructures.delete.useMutation();
-  const closeMutation = trpc.optionStructures.close.useMutation();
-  const reopenMutation = trpc.optionStructures.reopen.useMutation();
-  const shareMutation = trpc.optionStructures.shareWithAdmin.useMutation();
+  const shareMutation = trpc.optionStructures.share.useMutation();
 
   const utils = trpc.useUtils();
 
@@ -102,29 +100,17 @@ export function useStructures() {
   };
 
   // Chiudi struttura
+  // TODO: Implementare procedure close nel router optionStructures
   const closeStructure = async (structureId: number, daxSpot: number, riskFreeRate: number) => {
-    try {
-      await closeMutation.mutateAsync({
-        id: structureId,
-        daxSpot,
-        riskFreeRate,
-      });
-      refetch();
-    } catch (error) {
-      console.error('Errore durante la chiusura della struttura:', error);
-      throw error;
-    }
+    console.warn('closeStructure non implementata - procedure close non esiste nel router');
+    throw new Error('Funzionalità non ancora implementata');
   };
 
   // Riapri struttura
+  // TODO: Implementare procedure reopen nel router optionStructures
   const reopenStructure = async (structureId: number) => {
-    try {
-      await reopenMutation.mutateAsync({ id: structureId });
-      refetch();
-    } catch (error) {
-      console.error('Errore durante la riapertura della struttura:', error);
-      throw error;
-    }
+    console.warn('reopenStructure non implementata - procedure reopen non esiste nel router');
+    throw new Error('Funzionalità non ancora implementata');
   };
 
   // Condividi struttura con admin
@@ -143,8 +129,8 @@ export function useStructures() {
 
   // Filtra strutture active e closed
   const structures = structuresQuery.data || [];
-  const activeStructures = structures.filter(s => s.status === 'Active');
-  const closedStructures = structures.filter(s => s.status === 'Closed');
+  const activeStructures = structures.filter(s => s.status === 'active');
+  const closedStructures = structures.filter(s => s.status === 'closed');
 
   return {
     // Dati

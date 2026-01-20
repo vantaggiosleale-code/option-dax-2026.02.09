@@ -140,6 +140,7 @@ export const structures = mysqlTable("structures", {
   id: int("id").autoincrement().primaryKey(),
   userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
   tag: varchar("tag", { length: 100 }).notNull(), // e.g., "BPS5", "STG7"
+  multiplier: int("multiplier").notNull().default(5), // Product multiplier (1=CFD, 5=Micro Future, 25=Future)
   legsPerContract: int("legsPerContract").notNull().default(2), // 2 gambe/e
   legs: text("legs").notNull(), // JSON string of OptionLeg[]
   status: mysqlEnum("status", ["active", "closed"]).default("active").notNull(),

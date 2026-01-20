@@ -22,7 +22,7 @@ export interface Structure {
     id: number;
     tag: string;
     legs: OptionLeg[];
-    status: 'Active' | 'Closed';
+    status: 'active' | 'closed';
     multiplier: 1 | 5 | 25; // Product multiplier (e.g., 1=CFD, 5=Micro Future, 25=Future)
     closingDate?: string;
     realizedPnl?: number;

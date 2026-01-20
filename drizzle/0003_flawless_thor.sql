@@ -1,0 +1,1 @@
+ALTER TABLE `structures` ADD `multiplier` int DEFAULT 5 NOT NULL;

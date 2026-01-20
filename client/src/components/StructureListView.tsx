@@ -7,6 +7,7 @@ import { PlusIcon, ArchiveIcon, ScanIcon, PortfolioIcon, UploadIcon, EditIcon, T
 import ImageAnalysisModal from './ImageAnalysisModal';
 import HistoricalImportModal from './HistoricalImportModal';
 import useSettingsStore from '../store/settingsStore';
+import { useMarketDataStore } from '../stores/marketDataStore';
 import { trpc } from '../lib/trpc';
 
 
@@ -43,7 +44,7 @@ const calculateNetPremium = (structure: Structure): number => {
 };
 
 const calculateUnrealizedPnlForStructure = (structure: Structure, marketData: MarketData, settings: Settings): number => {
-    if (structure.status !== 'Active') {
+    if (structure.status !== 'active') {
         return 0;
     }
 
@@ -86,35 +87,8 @@ const StructureListView: React.FC<StructureListViewProps> = ({ setCurrentView })
     const { structures, deleteStructures, isLoading } = useStructures();
     const { settings } = useSettingsStore();
     
-    // Market data gestito localmente (non più in Zustand)
-    const [marketData, setMarketData] = useState<MarketData>({
-        daxSpot: 21885.79,
-        riskFreeRate: 2.61,
-    });
-    const [isLoadingSpot, setIsLoadingSpot] = useState(false);
-    
-    // Funzione per ricaricare DAX spot da Yahoo Finance
-    const refreshDaxSpot = async () => {
-        setIsLoadingSpot(true);
-        try {
-            const response = await fetch('/api/trpc/marketData.getDaxPrice', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({})
-            });
-            const data = await response.json();
-            const price = data.result.data.json.price;
-            console.log('Prezzo DAX aggiornato:', price);
-            setMarketData(prev => ({
-                ...prev,
-                daxSpot: price
-            }));
-        } catch (e) {
-            console.error('Errore aggiornamento prezzo DAX:', e);
-        } finally {
-            setIsLoadingSpot(false);
-        }
-    };
+    // Market data gestito con store globale Zustand
+    const { marketData, setMarketData, refreshDaxSpot, isLoadingSpot } = useMarketDataStore();
     
     // setCurrentView ora viene passata come prop da App.tsx
     const [isAnalysisModalOpen, setIsAnalysisModalOpen] = useState(false);
@@ -122,8 +96,8 @@ const StructureListView: React.FC<StructureListViewProps> = ({ setCurrentView })
     const [isBulkEditMode, setIsBulkEditMode] = useState(false);
     const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
 
-    const activeStructures = structures.filter(s => s.status === 'Active');
-    const closedStructures = structures.filter(s => s.status === 'Closed');
+    const activeStructures = structures.filter(s => s.status === 'active');
+    const closedStructures = structures.filter(s => s.status === 'closed');
 
     const totalPortfolioGreeks = useMemo(() => {
         const initialGreeks = { delta: 0, gamma: 0, theta: 0, vega: 0 };
