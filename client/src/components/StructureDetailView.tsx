@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { OptionLeg, MarketData, Structure, CalculatedGreeks } from '../types';
 import { BlackScholes, getTimeToExpiry, calculateImpliedVolatility } from '../services/blackScholes';
 import { useStructures } from '../hooks/useStructures';
@@ -30,6 +30,9 @@ interface StructureDetailViewProps {
 
 const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, setCurrentView }) => {
     const { structures, addStructure, updateStructure, deleteStructure, closeStructure, reopenStructure } = useStructures();
+    
+    // Ref per input uncontrolled
+    const tagInputRef = useRef<HTMLInputElement>(null);
     
     // Market data gestito localmente
     const [marketData, setMarketData] = useState<MarketData>({
@@ -204,10 +207,15 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
 
     const handleSave = () => {
         if (!localStructure || isReadOnly) return;
-        if ('id' in localStructure) {
-            updateStructure(localStructure as Structure);
+        
+        // Leggi valore da input uncontrolled
+        const tagValue = tagInputRef.current?.value || '';
+        const structureToSave = { ...localStructure, tag: tagValue };
+        
+        if ('id' in structureToSave) {
+            updateStructure(structureToSave as Structure);
         } else {
-            addStructure(localStructure);
+            addStructure(structureToSave);
         }
         setCurrentView('list');
     };
@@ -419,10 +427,10 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
                         <div>
                             <label htmlFor="structure-tag" className="text-sm font-medium text-gray-400">Tag Struttura</label>
                             <input
+                                ref={tagInputRef}
                                 id="structure-tag"
                                 type="text"
-                                value={localStructure?.tag || ''}
-                                onChange={(e) => updateStructureField('tag', e.target.value)}
+                                defaultValue={localStructure?.tag || ''}
                                 className={`mt-1 bg-gray-700 border border-gray-600 rounded-md px-3 py-2 w-full text-white font-bold text-lg focus:ring-2 focus:ring-accent focus:border-accent outline-none ${disabledClass}`}
                                 disabled={isReadOnly}
                             />

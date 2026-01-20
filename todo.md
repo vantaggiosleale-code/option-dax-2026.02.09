@@ -153,13 +153,16 @@
 - [x] Correggere chiamata frontend usando fetch diretto
 - [x] Testare che il pulsante aggiorni il prezzo correttamente (21885.79 → 24959.06)
 
-## Bug Campo Tag Struttura Non Permette Digitazione (IN PROGRESS)
+## Bug Campo Tag Struttura Non Permette Digitazione (COMPLETATO)
 - [x] Verificare input Tag Struttura in StructureDetailView
 - [x] Aggiunto optional chaining value={localStructure?.tag || ''}
 - [x] Creato updateStructureField con callback form setState
 - [x] Verificato che input non è disabled
 - [x] Verificato che input può ricevere focus
-- [ ] Testare digitazione manuale da parte utente
+- [x] Testato manualmente - ancora non funziona
+- [x] Convertire input da controlled a uncontrolled con useRef
+- [x] Aggiornare handleSave per leggere valore da tagInputRef.current.value
+- [x] Testare digitazione con uncontrolled input - FUNZIONA!
 
 ## Bug Link Torna alla Lista Non Funziona (COMPLETATO)
 - [x] Verificare link "Torna alla Lista" in StructureDetailView
