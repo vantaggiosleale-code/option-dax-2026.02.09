@@ -13,6 +13,7 @@ import QuantitySelector from './QuantitySelector';
 import StrikeSelector from './StrikeSelector';
 import { useAuth } from '../_core/hooks/useAuth';
 import { toast } from 'sonner';
+import GraphicModal from './GraphicModal';
 
 const CheckCircleIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 inline-block mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -60,6 +61,7 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
     const [localStructure, setLocalStructure] = useState<Omit<Structure, 'id' | 'status'> | Structure | null>(null);
     const [isReadOnly, setIsReadOnly] = useState(false);
     const [localInputValues, setLocalInputValues] = useState<Record<string, string>>({});
+    const [showGraphicModal, setShowGraphicModal] = useState(false);
 
 
     useEffect(() => {
@@ -671,6 +673,16 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
                             <button onClick={handleSave} className="w-full bg-profit/80 hover:bg-profit text-white font-bold py-2 rounded-md transition">
                                 Salva Modifiche
                             </button>
+                            <button 
+                                onClick={() => setShowGraphicModal(true)} 
+                                disabled={!('id' in localStructure)} 
+                                className={`w-full bg-blue-600/80 hover:bg-blue-600 text-white font-bold py-2 rounded-md transition flex items-center justify-center space-x-2 ${!('id' in localStructure) ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
+                                </svg>
+                                <span>Genera Grafica</span>
+                            </button>
                              <div className="flex space-x-2">
                                 <button onClick={handleClose} disabled={!('id' in localStructure)} className={`w-full bg-warning/80 hover:bg-warning text-white font-bold py-2 rounded-md transition flex items-center justify-center ${disabledClass}`}>
                                     <CheckCircleIcon />
@@ -796,6 +808,15 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
                     </div>
                 </div>
             </div>
+            
+            {/* Modal Generazione Grafiche */}
+            {'id' in localStructure && (
+                <GraphicModal 
+                    structureId={localStructure.id} 
+                    isOpen={showGraphicModal} 
+                    onClose={() => setShowGraphicModal(false)} 
+                />
+            )}
         </div>
     );
 };

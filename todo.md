@@ -284,7 +284,7 @@
 - [x] Creare tRPC router graphics.generate
 - [x] Ricevere design Stitch finali (HTML/CSS + PNG)
 - [ ] Convertire template Stitch in Handlebars con placeholder dinamici
-- [ ] UI: pulsante "Genera Grafica" + modal preview
+- [x] UI: pulsante "Genera Grafica" + modal preview
 - [ ] UI: sezione storico grafiche generate
 - [ ] Trigger automatici: apertura, aggiustamento, chiusura
 - [ ] Testing flusso completo generazione grafiche
