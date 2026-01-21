@@ -2,7 +2,7 @@ import { publicProcedure, router } from "../_core/trpc";
 import { TRPCError } from "@trpc/server";
 
 export const marketDataRouter = router({
-  getDaxPrice: publicProcedure.mutation(async () => {
+  getDaxPrice: publicProcedure.query(async () => {
     try {
       // Yahoo Finance API per DAX (^GDAXI)
       const symbol = "^GDAXI";

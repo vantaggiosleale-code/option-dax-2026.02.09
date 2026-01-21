@@ -97,7 +97,19 @@ const StructureListView: React.FC<StructureListViewProps> = ({ setCurrentView })
     const { settings } = useSettingsStore();
     
     // Market data gestito con store globale Zustand
-    const { marketData, setMarketData, refreshDaxSpot, isLoadingSpot } = useMarketDataStore();
+    const { marketData, setMarketData } = useMarketDataStore();
+    
+    // Fetch DAX price via tRPC
+    const { data: daxPriceData, isLoading: isLoadingSpot, refetch: refetchDaxPrice } = trpc.marketData.getDaxPrice.useQuery(undefined, {
+        refetchInterval: 60000, // Refresh ogni minuto
+    });
+    
+    // Aggiorna store quando dati cambiano
+    useEffect(() => {
+        if (daxPriceData?.price) {
+            setMarketData((prev) => ({ ...prev, daxSpot: daxPriceData.price }));
+        }
+    }, [daxPriceData, setMarketData]);
     
     // setCurrentView ora viene passata come prop da App.tsx
     const [isAnalysisModalOpen, setIsAnalysisModalOpen] = useState(false);
@@ -107,11 +119,6 @@ const StructureListView: React.FC<StructureListViewProps> = ({ setCurrentView })
 
     const activeStructures = structures.filter(s => s.status === 'active');
     const closedStructures = structures.filter(s => s.status === 'closed');
-
-    // Refresh automatico prezzo DAX al caricamento della pagina
-    useEffect(() => {
-        refreshDaxSpot();
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     const totalPortfolioGreeks = useMemo(() => {
         const initialGreeks = { delta: 0, gamma: 0, theta: 0, vega: 0 };
@@ -205,7 +212,7 @@ const StructureListView: React.FC<StructureListViewProps> = ({ setCurrentView })
                                 <button onClick={() => handleSpotStep(1)} className="px-2 py-1 text-gray-300 hover:bg-gray-600 border-l border-r border-gray-600 font-mono">+1</button>
                                 <button onClick={() => handleSpotStep(10)} className="px-2 py-1 text-gray-300 hover:bg-gray-600 border-r border-gray-600 font-mono">+10</button>
                                 <button 
-                                    onClick={refreshDaxSpot} 
+                                    onClick={() => refetchDaxPrice()} 
                                     disabled={isLoadingSpot}
                                     className="px-2 py-1 text-accent hover:text-white hover:bg-gray-600 rounded-r-md transition disabled:opacity-50 disabled:cursor-not-allowed"
                                     title="Aggiorna Prezzo Live (Yahoo Finance)"

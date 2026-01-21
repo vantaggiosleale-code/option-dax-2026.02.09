@@ -54,7 +54,13 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
     const tagInputRef = useRef<HTMLInputElement>(null);
     
     // Market data gestito con store globale Zustand
-    const { marketData, setMarketData, refreshDaxSpot, isLoadingSpot } = useMarketDataStore();
+    const { marketData, setMarketData } = useMarketDataStore();
+    
+    // Fetch DAX price via tRPC
+    const { isLoading: isLoadingSpot, refetch: refetchDaxPrice } = trpc.marketData.getDaxPrice.useQuery(undefined, {
+        refetchInterval: 60000,
+        enabled: false, // Disabilitato auto-fetch perché già fatto in StructureListView
+    });
     
     // setCurrentView ora viene passata come prop da App.tsx
     const { settings } = useSettingsStore();
@@ -454,7 +460,7 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
                         <button onClick={() => handleSpotStep(1)} className="px-2 py-1 text-gray-300 hover:bg-gray-600 border-l border-r border-gray-600 font-mono">+1</button>
                         <button onClick={() => handleSpotStep(10)} className="px-2 py-1 text-gray-300 hover:bg-gray-600 border-r border-gray-600 font-mono">+10</button>
                         <button 
-                            onClick={refreshDaxSpot} 
+                            onClick={() => refetchDaxPrice()} 
                             disabled={isLoadingSpot}
                             className="px-2 py-1 text-accent hover:text-white hover:bg-gray-600 rounded-r-md transition disabled:opacity-50 disabled:cursor-not-allowed"
                             title="Aggiorna Prezzo Live (Yahoo Finance)"

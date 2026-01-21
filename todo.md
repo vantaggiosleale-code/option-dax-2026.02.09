@@ -316,3 +316,18 @@
 ## Fix Pulsanti Trasparenti Modal (COMPLETATO)
 - [x] Aggiungere sfondo solido ai pulsanti tipo grafica (outline variant ha bg trasparente)
 - [x] Testare visibilità pulsanti su sfondo scuro
+
+## Fix Contrasto Pulsanti (COMPLETATO)
+- [x] Sostituire bg-card con bg-slate-600 per contrasto garantito
+- [x] Testare visibilità su sfondo modal scuro
+
+## Fix Errori Border (COMPLETATO)
+- [x] Rimuovere border-slate-600 che causava errori
+- [x] Usare bg-slate-600 solido
+- [x] Testare visibilità pulsanti
+
+## Fix Errori Runtime (COMPLETATO)
+- [x] Fix tRPC ritorna HTML invece di JSON (aggiornamento prezzo DAX) - Sostituito fetch CORS proxy con tRPC query
+- [x] Fix tRPC ritorna HTML invece di JSON (salvataggio struttura) - Risolto con fix DAX price
+- [x] Fix tRPC ritorna HTML invece di JSON (aggiornamento struttura) - Risolto con fix DAX price
+- [x] Fix missing key prop in StructureDetailView - Già presente
