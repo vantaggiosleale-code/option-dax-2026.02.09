@@ -268,3 +268,29 @@
 - [ ] Testare flusso: admin pubblica → utente importa → modifica copia indipendente
 
 - [x] 🔴 BUG: Toggle "Visibilità Pubblica" non risponde al click - RISOLTO: spostato useMutation al top level invece di dentro onChange
+
+- [x] 🔴 BUG CRITICO DEPLOYMENT: Timeout durante PrepareInfraActivity - DOCUMENTATO: creato report dettagliato per supporto Manus (DEPLOYMENT_ISSUE_REPORT.md), problema lato piattaforma non del codice
+
+## 🎨 Feature: Grafiche Telegram per Comunicazione Operazioni
+
+- [x] Creare mock-up grafica apertura nuova struttura (verticale 600x800px, stile minimalista moderno)
+- [x] Creare mock-up grafica aggiustamento (layout 2 colonne, GRANDE punti, piccolo euro)
+- [x] Creare mock-up grafica chiusura totale (GRANDE punti, piccolo euro, no %)
+- [x] Approvazione mock-up da parte utente
+- [x] Setup backend: installare puppeteer e handlebars
+- [x] Creare 3 template HTML/CSS (apertura, aggiustamento, chiusura)
+- [x] Implementare generator.ts con generateGraphic()
+- [x] Aggiornare schema database con tabella structure_graphics
+- [x] Creare tRPC router graphics.generate
+- [x] Ricevere design Stitch finali (HTML/CSS + PNG)
+- [ ] Convertire template Stitch in Handlebars con placeholder dinamici
+- [ ] UI: pulsante "Genera Grafica" + modal preview
+- [ ] UI: sezione storico grafiche generate
+- [ ] Trigger automatici: apertura, aggiustamento, chiusura
+- [ ] Testing flusso completo generazione grafiche
+
+## 🔧 Ottimizzazioni Multi-Utente
+
+- [ ] Invalidare cache lista pubblica dopo toggle visibilità
+- [ ] Aggiungere badge visivo "🌐 Pubblica" sulle card strutture
+- [ ] Testare flusso completo: admin pubblica → utente importa → modifica copia indipendente

@@ -171,3 +171,18 @@ export const structures = mysqlTable("structures", {
 
 export type Structure = typeof structures.$inferSelect;
 export type InsertStructure = typeof structures.$inferInsert;
+
+/**
+ * Structure graphics table - stores generated Telegram graphics for structures
+ */
+export const structureGraphics = mysqlTable("structure_graphics", {
+  id: int("id").autoincrement().primaryKey(),
+  structureId: int("structureId").notNull().references(() => structures.id, { onDelete: "cascade" }),
+  type: mysqlEnum("type", ["apertura", "aggiustamento", "chiusura"]).notNull(),
+  imageUrl: varchar("imageUrl", { length: 1000 }).notNull(), // S3 URL
+  imageKey: varchar("imageKey", { length: 500 }).notNull(), // S3 key
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type StructureGraphic = typeof structureGraphics.$inferSelect;
+export type InsertStructureGraphic = typeof structureGraphics.$inferInsert;
