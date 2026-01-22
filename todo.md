@@ -386,3 +386,8 @@
 - [x] Cambiare sidebar da trasparente a BIANCO PIENO (bg-white solido)
 - [x] Rimuovere tutte le trasparenze dalla sidebar
 - [x] Testare che sidebar bianca sia leggibile su sfondo scuro
+
+## 🎨 Fix Colore Nome Account Header
+- [x] Cambiare colore nome account da text-gray-300 (grigio chiaro) a text-gray-900 (nero/grigio scuro)
+- [x] Testare leggibilità su sfondo header chiaro
+- [x] Aggiunto font-medium per enfasi
