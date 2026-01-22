@@ -77,7 +77,7 @@ const App: React.FC = () => {
             
             {/* Main Content */}
             <div className={`flex-1 flex flex-col ${isAuthenticated ? 'md:ml-64' : ''}`}>
-                <header className="bg-card/50 backdrop-blur-sm border-b border-border p-3 flex items-center justify-between sticky top-0 z-10">
+                <header className="bg-card border-b border-border p-3 flex items-center justify-between sticky top-0 z-10">
                     {/* Hamburger Menu (Mobile Only) */}
                     {isAuthenticated && (
                         <button

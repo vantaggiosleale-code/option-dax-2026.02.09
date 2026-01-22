@@ -72,7 +72,7 @@
   --border: oklch(0.92 0.004 286.32);
   --input: oklch(0.92 0.004 286.32);
   --ring: oklch(0.623 0.214 259.815);
-  --sidebar: oklch(0.985 0 0);
+  --sidebar: oklch(1 0 0); /* Bianco puro opaco */
   --sidebar-foreground: oklch(0.235 0.015 65);
   --sidebar-accent: oklch(0.967 0.001 286.375);
   --sidebar-accent-foreground: oklch(0.141 0.005 285.823);

@@ -258,7 +258,7 @@ const StructureListView: React.FC<StructureListViewProps> = ({ setCurrentView })
                         <div className="flex items-center space-x-2">
                              <button 
                                 onClick={() => setIsHistoryModalOpen(true)}
-                                className="flex items-center justify-center bg-muted hover:bg-muted/80 text-white font-semibold p-2 md:py-2 md:px-3 rounded-md transition"
+                                className="flex items-center justify-center bg-muted hover:bg-muted text-white font-semibold p-2 md:py-2 md:px-3 rounded-md transition"
                                 title="Importa Storico da Immagini"
                             >
                                 <UploadIcon />
@@ -266,7 +266,7 @@ const StructureListView: React.FC<StructureListViewProps> = ({ setCurrentView })
                             </button>
                              <button 
                                 onClick={() => setIsAnalysisModalOpen(true)}
-                                className="flex items-center justify-center bg-muted hover:bg-muted/80 text-white font-semibold p-2 md:py-2 md:px-3 rounded-md transition"
+                                className="flex items-center justify-center bg-muted hover:bg-muted text-white font-semibold p-2 md:py-2 md:px-3 rounded-md transition"
                                 title="Carica Screenshot di un Trade"
                             >
                                 <ScanIcon />
@@ -274,7 +274,7 @@ const StructureListView: React.FC<StructureListViewProps> = ({ setCurrentView })
                             </button>
                             <button 
                                 onClick={() => setCurrentView('detail', 'new')}
-                                className="flex items-center justify-center bg-accent/80 hover:bg-accent text-white font-semibold p-2 md:py-2 md:px-3 rounded-md transition"
+                                className="flex items-center justify-center bg-accent hover:bg-accent text-white font-semibold p-2 md:py-2 md:px-3 rounded-md transition"
                                 title="Crea Nuova Struttura"
                             >
                                 <PlusIcon />
@@ -291,7 +291,7 @@ const StructureListView: React.FC<StructureListViewProps> = ({ setCurrentView })
                                 return (
                                     <div 
                                         key={structure.id} 
-                                        className="bg-card border border-border p-4 rounded-lg cursor-pointer hover:border-sky-500/50 transition-all flex flex-col sm:flex-row sm:justify-between sm:items-center"
+                                        className="bg-card border border-border p-4 rounded-lg cursor-pointer hover:border-sky-500 transition-all flex flex-col sm:flex-row sm:justify-between sm:items-center"
                                         onClick={() => setCurrentView('detail', structure.id)}
                                     >
                                         <div className="flex-shrink-0 mb-3 sm:mb-0 w-full sm:w-auto">
@@ -365,7 +365,7 @@ const StructureListView: React.FC<StructureListViewProps> = ({ setCurrentView })
                                         setIsBulkEditMode(!isBulkEditMode);
                                         setSelectedIds(new Set()); // Reset selection on toggle
                                     }}
-                                    className="flex items-center space-x-2 text-sm bg-muted hover:bg-muted/80 text-white font-semibold py-1 px-3 rounded-md transition"
+                                    className="flex items-center space-x-2 text-sm bg-muted hover:bg-muted text-white font-semibold py-1 px-3 rounded-md transition"
                                 >
                                     {isBulkEditMode ? <span>Annulla</span> : <><EditIcon /><span>Modifica</span></>}
                                 </button>
@@ -379,7 +379,7 @@ const StructureListView: React.FC<StructureListViewProps> = ({ setCurrentView })
                                 return (
                                     <div
                                         key={structure.id}
-                                        className={`rounded-lg flex items-center transition-all cursor-pointer ${isBulkEditMode ? (isSelected ? 'bg-sky-500/10 border-2 border-sky-500' : 'bg-card border border-border hover:border-sky-500/50') : 'bg-card border border-border hover:border-sky-500/50'}`}
+                                        className={`rounded-lg flex items-center transition-all cursor-pointer ${isBulkEditMode ? (isSelected ? 'bg-sky-500 border-2 border-sky-500' : 'bg-card border border-border hover:border-sky-500') : 'bg-card border border-border hover:border-sky-500'}`}
                                         onClick={() => {
                                             if (isBulkEditMode) {
                                                 handleSelect(structure.id);
@@ -439,7 +439,7 @@ const StructureListView: React.FC<StructureListViewProps> = ({ setCurrentView })
             </div>
 
             {isBulkEditMode && selectedIds.size > 0 && (
-                <div className="fixed bottom-0 left-0 right-0 bg-background/90 backdrop-blur-sm border-t border-border p-4 z-40 transition-transform duration-300 ease-in-out">
+                <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border p-4 z-40 transition-transform duration-300 ease-in-out">
                     <div className="max-w-4xl mx-auto flex justify-between items-center">
                         <span className="font-semibold text-white">{selectedIds.size} {selectedIds.size === 1 ? 'struttura selezionata' : 'strutture selezionate'}</span>
                         <button
@@ -450,7 +450,7 @@ const StructureListView: React.FC<StructureListViewProps> = ({ setCurrentView })
                                     setSelectedIds(new Set());
                                 }
                             }}
-                            className="flex items-center space-x-2 bg-loss hover:bg-loss/80 text-white font-bold py-2 px-4 rounded-md transition"
+                            className="flex items-center space-x-2 bg-loss hover:bg-loss text-white font-bold py-2 px-4 rounded-md transition"
                         >
                             <TrashIcon />
                             <span>Elimina Selezionate</span>

@@ -144,7 +144,7 @@ const ImageAnalysisModal: React.FC<ImageAnalysisModalProps> = ({ isOpen, onClose
                 <div className="p-4 flex-grow overflow-y-auto space-y-4">
                      {!previewUrl && (
                         <div 
-                            className="border-2 border-dashed border-gray-600 rounded-lg p-10 text-center cursor-pointer hover:border-accent hover:bg-gray-700/50"
+                            className="border-2 border-dashed border-gray-600 rounded-lg p-10 text-center cursor-pointer hover:border-accent hover:bg-gray-700"
                             onDrop={handleDrop}
                             onDragOver={e => e.preventDefault()}
                             onClick={() => document.getElementById('file-upload')?.click()}
@@ -199,11 +199,11 @@ const ImageAnalysisModal: React.FC<ImageAnalysisModalProps> = ({ isOpen, onClose
                 <div className="p-4 border-t border-gray-700 flex justify-end space-x-2">
                     <button onClick={handleClose} className="bg-gray-600 hover:bg-gray-500 text-white font-semibold py-2 px-4 rounded-md">Annulla</button>
                     {extractedTrades.length > 0 ? (
-                        <button onClick={handleCreateStructure} className="bg-profit hover:bg-profit/80 text-white font-bold py-2 px-4 rounded-md">
+                        <button onClick={handleCreateStructure} className="bg-profit hover:bg-profit text-white font-bold py-2 px-4 rounded-md">
                             Crea Nuova Struttura
                         </button>
                     ) : (
-                        <button onClick={handleAnalyze} disabled={!imageFile || isLoading} className="bg-accent hover:bg-accent/80 text-white font-bold py-2 px-4 rounded-md disabled:opacity-50 disabled:cursor-not-allowed">
+                        <button onClick={handleAnalyze} disabled={!imageFile || isLoading} className="bg-accent hover:bg-accent text-white font-bold py-2 px-4 rounded-md disabled:opacity-50 disabled:cursor-not-allowed">
                             Analizza
                         </button>
                     )}

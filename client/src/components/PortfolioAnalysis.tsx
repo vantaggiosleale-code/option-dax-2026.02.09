@@ -11,7 +11,7 @@ const CustomEquityTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
         const data = payload[0].payload;
         return (
-            <div className="bg-background/80 p-2 border border-border rounded-md shadow-lg text-sm">
+            <div className="bg-background p-2 border border-border rounded-md shadow-lg text-sm">
                 <p className="font-bold text-foreground">{data.tag}</p>
                 <p className="text-accent">Equity: {data.equity.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })}</p>
                 <p className="text-loss">Drawdown: {data.drawdown.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })}</p>
@@ -25,7 +25,7 @@ const CustomEquityTooltip = ({ active, payload }: any) => {
 const CustomPnlTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
         return (
-            <div className="bg-background/80 p-2 border border-border rounded-md shadow-lg text-sm">
+            <div className="bg-background p-2 border border-border rounded-md shadow-lg text-sm">
                 <p className="font-bold text-foreground">{label}</p>
                 <p className={payload[0].value >= 0 ? 'text-profit' : 'text-loss'}>
                     P&L Netto: {payload[0].value.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })}
@@ -37,8 +37,8 @@ const CustomPnlTooltip = ({ active, payload, label }: any) => {
 };
 
 const MetricCard = ({ icon, title, value, colorClass = 'text-foreground' }: { icon: React.ReactNode, title: string, value: string, colorClass?: string }) => (
-    <div className="bg-muted/50 p-4 rounded-lg flex items-start">
-        <div className="p-2 bg-muted/50 rounded-md mr-4 text-muted-foreground">{icon}</div>
+    <div className="bg-muted p-4 rounded-lg flex items-start">
+        <div className="p-2 bg-muted rounded-md mr-4 text-muted-foreground">{icon}</div>
         <div>
             <p className="text-sm text-muted-foreground font-medium">{title}</p>
             <p className={`text-xl font-bold font-mono ${colorClass}`}>{value}</p>

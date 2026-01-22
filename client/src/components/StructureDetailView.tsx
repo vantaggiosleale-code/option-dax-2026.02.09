@@ -664,7 +664,7 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
                             <p className="text-sm text-gray-400">Questa struttura non può essere modificata. Riaprila per apportare modifiche.</p>
                             <button
                                 onClick={handleReopen}
-                                className="w-full bg-accent/80 hover:bg-accent text-white font-bold py-2 rounded-md transition flex items-center justify-center space-x-2"
+                                className="w-full bg-accent hover:bg-accent text-white font-bold py-2 rounded-md transition flex items-center justify-center space-x-2"
                             >
                                 <ReopenIcon />
                                 <span>Riapri per Modificare</span>
@@ -672,17 +672,17 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
                          </div>
                      ) : (
                         <div className='space-y-2'>
-                            <button onClick={addLeg} className="w-full flex items-center justify-center space-x-2 bg-accent/80 hover:bg-accent text-white font-semibold py-2 rounded-md transition">
+                            <button onClick={addLeg} className="w-full flex items-center justify-center space-x-2 bg-accent hover:bg-accent text-white font-semibold py-2 rounded-md transition">
                                 <PlusIcon />
                                 <span>Aggiungi Gamba</span>
                             </button>
-                            <button onClick={handleSave} className="w-full bg-profit/80 hover:bg-profit text-white font-bold py-2 rounded-md transition">
+                            <button onClick={handleSave} className="w-full bg-profit hover:bg-profit text-white font-bold py-2 rounded-md transition">
                                 Salva Modifiche
                             </button>
                             <button 
                                 onClick={() => setShowGraphicModal(true)} 
                                 disabled={!('id' in localStructure)} 
-                                className={`w-full bg-blue-600/80 hover:bg-blue-600 text-white font-bold py-2 rounded-md transition flex items-center justify-center space-x-2 ${!('id' in localStructure) ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                className={`w-full bg-blue-600 hover:bg-blue-600 text-white font-bold py-2 rounded-md transition flex items-center justify-center space-x-2 ${!('id' in localStructure) ? 'opacity-50 cursor-not-allowed' : ''}`}
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                     <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
@@ -690,11 +690,11 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
                                 <span>Genera Grafica</span>
                             </button>
                              <div className="flex space-x-2">
-                                <button onClick={handleClose} disabled={!('id' in localStructure)} className={`w-full bg-warning/80 hover:bg-warning text-white font-bold py-2 rounded-md transition flex items-center justify-center ${disabledClass}`}>
+                                <button onClick={handleClose} disabled={!('id' in localStructure)} className={`w-full bg-warning hover:bg-warning text-white font-bold py-2 rounded-md transition flex items-center justify-center ${disabledClass}`}>
                                     <CheckCircleIcon />
                                     Chiudi Struttura
                                 </button>
-                                <button onClick={handleDelete} disabled={!('id' in localStructure)} className={`w-full bg-loss/80 hover:bg-loss text-white font-bold py-2 rounded-md transition flex items-center justify-center ${disabledClass}`}>
+                                <button onClick={handleDelete} disabled={!('id' in localStructure)} className={`w-full bg-loss hover:bg-loss text-white font-bold py-2 rounded-md transition flex items-center justify-center ${disabledClass}`}>
                                     <TrashIcon />
                                     Elimina
                                 </button>
@@ -724,7 +724,7 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
                                         const netPnlClass = pnl.netPnlEuro >= 0 ? 'text-profit' : 'text-loss';
                                         const grossPnlClass = pnl.grossPnlEuro >= 0 ? 'text-profit' : 'text-loss';
                                         return (
-                                            <tr key={pnl.id} className={`border-b border-gray-700 hover:bg-gray-700/50 ${pnl.isClosed ? 'opacity-60' : ''}`}>
+                                            <tr key={pnl.id} className={`border-b border-gray-700 hover:bg-gray-700 ${pnl.isClosed ? 'opacity-60' : ''}`}>
                                                 <td className="px-2 py-1 font-sans font-medium text-white">#{index + 1} {pnl.isClosed ? '(Chiusa)' : ''}</td>
                                                 <td className={`px-2 py-1 text-right ${pnl.pnlPoints >= 0 ? 'text-profit' : 'text-loss'}`}>{pnl.pnlPoints.toFixed(2)}</td>
                                                 <td className={`px-2 py-1 text-right ${grossPnlClass}`}>€{pnl.grossPnlEuro.toFixed(2)}</td>
@@ -735,7 +735,7 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
                                     })}
                                 </tbody>
                                 <tfoot className="font-mono font-bold text-white">
-                                    <tr className="bg-gray-700/50">
+                                    <tr className="bg-gray-700">
                                         <td className="px-2 py-1 font-sans text-white" colSpan={2}>Realizzato</td>
                                         <td className={`px-2 py-1 text-right ${calculatedPnl.totalRealizedGross >= 0 ? 'text-profit' : 'text-loss'}`}>
                                             €{calculatedPnl.totalRealizedGross.toFixed(2)}
@@ -747,7 +747,7 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
                                             €{calculatedPnl.totalRealizedNet.toFixed(2)}
                                         </td>
                                     </tr>
-                                     <tr className="bg-gray-700/50">
+                                     <tr className="bg-gray-700">
                                         <td className="px-2 py-1 font-sans text-white" colSpan={2}>Non Realizzato</td>
                                         <td className={`px-2 py-1 text-right ${calculatedPnl.totalUnrealizedGross >= 0 ? 'text-profit' : 'text-loss'}`}>
                                             €{calculatedPnl.totalUnrealizedGross.toFixed(2)}
@@ -790,7 +790,7 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
                                     {localStructure.legs.filter(l => l.closingPrice === null || l.closingPrice === undefined).map((leg) => {
                                         const greeks = calculatedGreeks.legGreeks.find(g => g.id === leg.id);
                                         return (
-                                            <tr key={leg.id} className="border-b border-gray-700 hover:bg-gray-700/50">
+                                            <tr key={leg.id} className="border-b border-gray-700 hover:bg-gray-700">
                                                 <td className="px-4 py-1 font-sans font-medium text-white">#{leg.id} {leg.quantity > 0 ? 'L' : 'S'} {leg.optionType.slice(0,1)} @{leg.strike}</td>
                                                 <td className="px-4 py-1 text-right text-white">{greeks?.delta.toFixed(2)}</td>
                                                 <td className="px-4 py-1 text-right text-white">{greeks?.gamma.toFixed(3)}</td>

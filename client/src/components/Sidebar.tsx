@@ -47,7 +47,7 @@ export function Sidebar({ currentView, onNavigate, isOpen = false }: SidebarProp
                 transition-all duration-200
                 ${isActive 
                   ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium' 
-                  : 'text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground'
+                  : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
                 }
               `}
             >

@@ -108,7 +108,7 @@ const SettingsView: React.FC<SettingsViewProps> = ({ setCurrentView }) => {
                     {isSaved && <span className="text-sm text-profit mr-4">Impostazioni salvate!</span>}
                     <button
                         onClick={handleSave}
-                        className="bg-accent hover:bg-accent/80 text-white font-bold py-2 px-4 rounded-md transition"
+                        className="bg-accent hover:bg-accent text-white font-bold py-2 px-4 rounded-md transition"
                     >
                         Salva Modifiche
                     </button>

@@ -252,7 +252,7 @@ const PayoffChart: React.FC<PayoffChartProps> = ({ legs, marketData, multiplier 
     const CustomTooltip = ({ active, payload, label }: any) => {
         if (active && payload && payload.length) {
         return (
-            <div className="bg-gray-900/80 p-2 border border-gray-600 rounded-md shadow-lg text-sm">
+            <div className="bg-gray-900 p-2 border border-gray-600 rounded-md shadow-lg text-sm">
             <p className="font-bold text-gray-200">{`Spot DAX: €${label.toFixed(2)}`}</p>
             {payload.map((pld: any) => (
                 <p key={pld.dataKey} style={{color: pld.stroke}}>

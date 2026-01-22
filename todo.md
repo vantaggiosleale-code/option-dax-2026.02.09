@@ -448,3 +448,18 @@
 - [x] Aggiornare PayoffSimulator: sostituiti colori hardcoded
 - [x] Aggiornare GreeksCalculator: sostituiti colori hardcoded
 - [ ] Testare entrambi i temi (light e dark) su tutte le pagine
+
+## BUG: Rimozione Trasparenze (COMPLETATO)
+- [x] Correggere sidebar trasparente in light mode (CSS variables --sidebar → oklch(1 0 0))
+- [x] Rimuovere tutte le trasparenze in PortfolioAnalysis (bg-background/80 → bg-background, bg-muted/50 → bg-muted)
+- [x] Rimuovere backdrop-blur da header in App.tsx
+- [x] Rimuovere tutte le opacità /50, /80, /90, /95 da tutti i componenti:
+  * StructureListView.tsx
+  * StructureDetailView.tsx
+  * SettingsView.tsx
+  * PayoffChart.tsx
+  * Sidebar.tsx
+  * StrikeSelector.tsx
+  * HistoricalImportModal.tsx
+  * ImageAnalysisModal.tsx
+- [ ] Testare che tutto sia solido in light e dark mode
