@@ -3,9 +3,10 @@ import { LayoutDashboard, TrendingUp, Calculator, History, Settings } from 'luci
 interface SidebarProps {
   currentView: string;
   onNavigate: (view: string) => void;
+  isOpen?: boolean;
 }
 
-export function Sidebar({ currentView, onNavigate }: SidebarProps) {
+export function Sidebar({ currentView, onNavigate, isOpen = false }: SidebarProps) {
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'payoff', label: 'Simulatore Payoff', icon: TrendingUp },
@@ -15,7 +16,9 @@ export function Sidebar({ currentView, onNavigate }: SidebarProps) {
   ];
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-64 bg-sidebar border-r border-sidebar-border flex flex-col">
+    <aside className={`fixed left-0 top-0 h-screen w-64 bg-sidebar border-r border-sidebar-border flex flex-col z-40 transition-transform duration-300 ${
+      isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+    }`}>
       {/* Logo */}
       <div className="p-6 border-b border-sidebar-border">
         <h1 className="text-xl font-bold text-sidebar-foreground tracking-tight">

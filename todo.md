@@ -366,3 +366,10 @@
 - [ ] Ridisegnare grafici payoff con stile premium (linee sharp, colori solidi)
 - [ ] Testare redesign su tutte le pagine
 - [ ] Salvare checkpoint redesign premium
+
+## 📱 Mobile Responsiveness Issues (URGENT)
+- [x] Implementare hamburger menu per mobile (< 768px)
+- [x] Nascondere sidebar su mobile di default
+- [x] Aggiungere toggle sidebar con overlay per mobile
+- [x] Fixare posizione footer copyright in fondo alla sidebar
+- [ ] Testare layout responsive su vari breakpoint (richiede test utente su dispositivo mobile)
