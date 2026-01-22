@@ -85,7 +85,13 @@ const App: React.FC = () => {
             )}
             
             {/* Main Content */}
-            <div className={`flex-1 flex flex-col ${isAuthenticated ? 'md:ml-64' : ''}`}>
+            <div 
+                className={`flex-1 flex flex-col ${isAuthenticated ? 'md:ml-64' : ''}`}
+                style={{
+                    backgroundColor: theme === 'light' ? '#ffffff' : '#030712',
+                    color: theme === 'light' ? '#111827' : '#f9fafb',
+                }}
+            >
                 <header 
                     className="border-b p-3 flex items-center justify-between sticky top-0 z-10"
                     style={{
@@ -128,7 +134,13 @@ const App: React.FC = () => {
                         )}
                     </div>
                 </header>
-                <main className="flex-1 p-2 sm:p-4">
+                <main 
+                    className="flex-1 p-2 sm:p-4"
+                    style={{
+                        backgroundColor: theme === 'light' ? '#ffffff' : '#030712',
+                        color: theme === 'light' ? '#111827' : '#f9fafb',
+                    }}
+                >
                     {renderView()}
                 </main>
                 <div id="modal-root"></div>

@@ -513,3 +513,12 @@
 - [x] Light mode verificato funzionante: sidebar bianca + testo nero leggibile
 - [ ] Dark mode da testare: cliccare toggle per verificare
 - [x] NON TOCCARE: StructureDetailView (vista singola struttura) → lasciata nera come richiesto utente
+
+## BUG CRITICO: Dark Mode Main Content Bianco (RISOLTO)
+- [x] Dark mode: main content BIANCO invece di NERO
+- [x] Causa: inline styles mancanti sul main div e main tag in App.tsx
+- [x] Soluzione: Aggiunto inline styles a:
+  * Main div (riga 88-94): backgroundColor e color basati su theme
+  * Main tag (riga 137-143): backgroundColor e color basati su theme
+- [x] Light mode verificato funzionante: tutto bianco con testo nero leggibile
+- [ ] Dark mode da testare: cliccare toggle per verificare tutto nero con testo bianco
