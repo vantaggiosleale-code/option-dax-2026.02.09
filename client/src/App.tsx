@@ -14,6 +14,7 @@ import { SimpleGraphicTest } from './components/SimpleGraphicTest';
 import { Sidebar } from './components/Sidebar';
 import PayoffSimulator from './components/PayoffSimulator';
 import GreeksCalculator from './components/GreeksCalculator';
+import { useTheme } from './contexts/ThemeContext';
 // History.tsx rimosso - sostituito con PortfolioAnalysis
 
 const App: React.FC = () => {
@@ -37,6 +38,7 @@ const App: React.FC = () => {
         }
     };
     const { user, loading, isAuthenticated, logout } = useAuth();
+    const { theme } = useTheme();
 
     const handleLogout = async () => {
         await logout();
@@ -69,7 +71,13 @@ const App: React.FC = () => {
     }
 
     return (
-        <div className="bg-white dark:bg-gray-950 text-gray-900 dark:text-white font-sans min-h-screen flex">
+        <div 
+            className="font-sans min-h-screen flex"
+            style={{
+                backgroundColor: theme === 'light' ? '#ffffff' : '#030712',
+                color: theme === 'light' ? '#111827' : '#f9fafb',
+            }}
+        >
             {/* Sidebar */}
             {isAuthenticated && (
                 <Sidebar currentView={currentView} onNavigate={(view) => { handleNavigate(view); setIsSidebarOpen(false); }} isOpen={isSidebarOpen} />
@@ -77,7 +85,13 @@ const App: React.FC = () => {
             
             {/* Main Content */}
             <div className={`flex-1 flex flex-col ${isAuthenticated ? 'md:ml-64' : ''}`}>
-                <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 p-3 flex items-center justify-between sticky top-0 z-10">
+                <header 
+                    className="border-b p-3 flex items-center justify-between sticky top-0 z-10"
+                    style={{
+                        backgroundColor: theme === 'light' ? '#ffffff' : '#111827',
+                        borderColor: theme === 'light' ? '#e5e7eb' : '#1f2937',
+                    }}
+                >
                     {/* Hamburger Menu (Mobile Only) */}
                     {isAuthenticated && (
                         <button

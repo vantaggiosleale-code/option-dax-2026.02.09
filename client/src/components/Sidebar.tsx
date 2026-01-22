@@ -19,9 +19,15 @@ export function Sidebar({ currentView, onNavigate, isOpen = false }: SidebarProp
   ];
 
   return (
-    <aside className={`fixed left-0 top-0 h-screen w-64 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 flex flex-col z-60 transition-transform duration-300 shadow-lg ${
-      isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
-    }`}>
+    <aside 
+      className={`fixed left-0 top-0 h-screen w-64 border-r flex flex-col z-60 transition-transform duration-300 shadow-lg ${
+        isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+      }`}
+      style={{
+        backgroundColor: theme === 'light' ? '#ffffff' : '#111827',
+        borderColor: theme === 'light' ? '#e5e7eb' : '#1f2937',
+      }}
+    >
       {/* Logo */}
       <div className="p-6 border-b border-gray-200 dark:border-gray-800">
         <h1 className="text-xl font-bold text-gray-900 dark:text-white antialiased">

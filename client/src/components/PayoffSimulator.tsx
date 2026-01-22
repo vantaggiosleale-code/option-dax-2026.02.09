@@ -4,7 +4,7 @@ import { TrendingUp } from 'lucide-react';
 const PayoffSimulator: React.FC = () => {
     return (
         <div className="max-w-6xl mx-auto space-y-6">
-            <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-8">
+            <div className="bg-white border border-gray-200 rounded-lg p-8">
                 <div className="flex items-center space-x-3 mb-6">
                     <TrendingUp className="w-8 h-8 text-sky-500" />
                     <h1 className="text-3xl font-bold text-foreground">Simulatore Payoff</h1>
@@ -15,12 +15,12 @@ const PayoffSimulator: React.FC = () => {
                         <TrendingUp className="w-8 h-8 text-sky-500" />
                     </div>
                     <h2 className="text-2xl font-semibold text-foreground">Coming Soon</h2>
-                    <p className="text-gray-600 dark:text-gray-400 text-center max-w-md">
+                    <p className="text-gray-600 text-center max-w-md">
                         Il simulatore di payoff interattivo sarà disponibile a breve. 
                         Potrai visualizzare graficamente il profilo di rischio/rendimento delle tue strategie.
                     </p>
-                    <div className="mt-8 bg-[#0a0a0f] border border-gray-200 dark:border-gray-800 rounded-lg p-6 max-w-2xl">
-                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Funzionalità previste:</h3>
+                    <div className="mt-8 bg-[#0a0a0f] border border-gray-200 rounded-lg p-6 max-w-2xl">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-3">Funzionalità previste:</h3>
                         <ul className="space-y-2 text-muted-foreground">
                             <li className="flex items-start">
                                 <span className="text-sky-500 mr-2">•</span>

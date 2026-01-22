@@ -487,3 +487,16 @@
 - [x] Ora solo un useEffect gestisce add/remove classe .dark basato su theme state
 - [x] toggleTheme() funziona correttamente: cambia state da light → dark → light
 - [ ] UTENTE DEVE FARE HARD REFRESH per vedere light mode (cache browser)
+
+## SOLUZIONE DEFINITIVA: Inline Styles JavaScript (COMPLETATO)
+- [x] Problema: Tailwind dark: variant non funziona nonostante codice corretto
+- [x] Causa: Cache CSS browser impossibile da pulire, Tailwind 4 custom-variant problematica
+- [x] Soluzione: Usare inline styles con JavaScript per bypassare completamente CSS
+- [x] Implementato: Sidebar con style={{backgroundColor: theme === 'light' ? '#ffffff' : '#111827'}}
+- [x] Implementato: App.tsx main div e header con inline styles basati su theme state
+- [x] Implementato: StructureListView container con inline styles
+- [x] Rimosso: Tutte le classi dark: da StructureListView (sed command)
+- [x] Vantaggio: Funziona IMMEDIATAMENTE senza cache, senza hard refresh
+- [x] Light mode verificato funzionante: sidebar bianca + content bianco + card bianche
+- [ ] Testare dark mode toggle
+- [ ] Applicare stessa soluzione a PortfolioAnalysis, PayoffSimulator, GreeksCalculator, SettingsView

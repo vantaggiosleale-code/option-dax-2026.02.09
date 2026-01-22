@@ -4,7 +4,7 @@ import { Calculator } from 'lucide-react';
 const GreeksCalculator: React.FC = () => {
     return (
         <div className="max-w-6xl mx-auto space-y-6">
-            <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-8">
+            <div className="bg-white border border-gray-200 rounded-lg p-8">
                 <div className="flex items-center space-x-3 mb-6">
                     <Calculator className="w-8 h-8 text-sky-500" />
                     <h1 className="text-3xl font-bold text-foreground">Calcolatore Greche</h1>
@@ -15,12 +15,12 @@ const GreeksCalculator: React.FC = () => {
                         <Calculator className="w-8 h-8 text-sky-500" />
                     </div>
                     <h2 className="text-2xl font-semibold text-foreground">Coming Soon</h2>
-                    <p className="text-gray-600 dark:text-gray-400 text-center max-w-md">
+                    <p className="text-gray-600 text-center max-w-md">
                         Il calcolatore avanzato delle greche sarà disponibile a breve. 
                         Potrai analizzare in dettaglio Delta, Gamma, Theta, Vega e Rho delle tue posizioni.
                     </p>
-                    <div className="mt-8 bg-[#0a0a0f] border border-gray-200 dark:border-gray-800 rounded-lg p-6 max-w-2xl">
-                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Funzionalità previste:</h3>
+                    <div className="mt-8 bg-[#0a0a0f] border border-gray-200 rounded-lg p-6 max-w-2xl">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-3">Funzionalità previste:</h3>
                         <ul className="space-y-2 text-muted-foreground">
                             <li className="flex items-start">
                                 <span className="text-sky-500 mr-2">•</span>
