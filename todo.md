@@ -416,3 +416,35 @@
 - [x] Aggiungere ordinamento cliccabile (per tag, data chiusura, P/L)
 - [x] Implementare pulsante export CSV con download automatico
 - [ ] Testare che History mostri le strutture chiuse esistenti (richiede test utente)
+
+## 🔄 Ripristinare Storico Originale + Theme Unificato Light/Dark
+- [ ] Estrarre backup zip option-dax.zip
+- [ ] Recuperare componente Storico ORIGINALE dal backup
+- [ ] Sostituire History.tsx corrente con versione originale
+- [ ] Implementare light mode: tutto bianco uniforme come sidebar
+- [ ] Implementare dark mode: tutto scuro premium come Options Analyzer
+- [ ] Uniformare font, dimensioni, bottoni, colori in entrambe modalità
+- [ ] Aggiungere toggle Light/Dark mode (es. in sidebar footer)
+- [ ] Testare switch tra light/dark mode su tutte le sezioni
+
+## Ripristino Sezione Storico (COMPLETATO)
+- [x] Rimuovere History.tsx (componente tabella creato per errore)
+- [x] Sostituire History.tsx con PortfolioAnalysis originale dal backup
+- [x] Aggiornare Sidebar: "Storico" deve aprire PortfolioAnalysis (non History)
+- [x] Aggiornare PortfolioAnalysis per usare tRPC invece di Zustand
+- [x] Rimuovere pulsante "Torna alla Lista" (non serve con sidebar)
+- [ ] Testare che "Storico" carichi correttamente le statistiche strutture chiuse
+
+## Tema Unificato Light/Dark Mode (COMPLETATO)
+- [x] ThemeContext già esistente in contexts/ThemeContext.tsx
+- [x] Implementare ThemeProvider in main.tsx con switchable={true}
+- [x] CSS variables già definite in index.css per light mode (:root)
+- [x] CSS variables già definite in index.css per dark mode (.dark)
+- [x] Aggiungere toggle theme nella sidebar footer (pulsante Sun/Moon)
+- [x] Aggiornare Sidebar: usare bg-sidebar (bianco in light, nero in dark)
+- [x] Aggiornare App.tsx: usare bg-background, text-foreground
+- [x] Aggiornare StructureListView: sostituiti tutti i colori hardcoded con CSS variables
+- [x] Aggiornare PortfolioAnalysis: sostituiti tutti i colori hardcoded con CSS variables
+- [x] Aggiornare PayoffSimulator: sostituiti colori hardcoded
+- [x] Aggiornare GreeksCalculator: sostituiti colori hardcoded
+- [ ] Testare entrambi i temi (light e dark) su tutte le pagine

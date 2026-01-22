@@ -6,6 +6,7 @@ import { httpBatchLink } from '@trpc/client';
 import { trpc } from './lib/trpc';
 import App from './App';
 import ErrorBoundary from './components/ErrorBoundary';
+import { ThemeProvider } from './contexts/ThemeContext';
 
 function Root() {
   const [queryClient] = useState(() => new QueryClient({
@@ -29,11 +30,13 @@ function Root() {
 
   return (
     <ErrorBoundary>
-      <trpc.Provider client={trpcClient} queryClient={queryClient}>
-        <QueryClientProvider client={queryClient}>
-          <App />
-        </QueryClientProvider>
-      </trpc.Provider>
+      <ThemeProvider defaultTheme="light" switchable={true}>
+        <trpc.Provider client={trpcClient} queryClient={queryClient}>
+          <QueryClientProvider client={queryClient}>
+            <App />
+          </QueryClientProvider>
+        </trpc.Provider>
+      </ThemeProvider>
     </ErrorBoundary>
   );
 }

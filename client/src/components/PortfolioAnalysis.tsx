@@ -3,17 +3,16 @@ import React, { useMemo } from 'react';
 import {
   LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell, ReferenceLine, ComposedChart
 } from 'recharts';
-import { useStructures } from '../hooks/useStructures';
-import useSettingsStore from '../store/settingsStore';
-import { TrendingUpIcon, TrendingDownIcon, ScaleIcon, CheckBadgeIcon, PlusCircleIcon, MinusCircleIcon } from './icons';
+import { trpc } from '../lib/trpc';
+import { TrendingUp, TrendingDown, Scale, CheckCircle, PlusCircle, MinusCircle } from 'lucide-react';
 
 // Custom Tooltip for Equity Chart
 const CustomEquityTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
         const data = payload[0].payload;
         return (
-            <div className="bg-gray-900/80 p-2 border border-gray-600 rounded-md shadow-lg text-sm">
-                <p className="font-bold text-gray-200">{data.tag}</p>
+            <div className="bg-background/80 p-2 border border-border rounded-md shadow-lg text-sm">
+                <p className="font-bold text-foreground">{data.tag}</p>
                 <p className="text-accent">Equity: {data.equity.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })}</p>
                 <p className="text-loss">Drawdown: {data.drawdown.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })}</p>
             </div>
@@ -26,8 +25,8 @@ const CustomEquityTooltip = ({ active, payload }: any) => {
 const CustomPnlTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
         return (
-            <div className="bg-gray-900/80 p-2 border border-gray-600 rounded-md shadow-lg text-sm">
-                <p className="font-bold text-gray-200">{label}</p>
+            <div className="bg-background/80 p-2 border border-border rounded-md shadow-lg text-sm">
+                <p className="font-bold text-foreground">{label}</p>
                 <p className={payload[0].value >= 0 ? 'text-profit' : 'text-loss'}>
                     P&L Netto: {payload[0].value.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })}
                 </p>
@@ -37,58 +36,40 @@ const CustomPnlTooltip = ({ active, payload, label }: any) => {
     return null;
 };
 
-// Helper to extract strategy type from tag
-const extractStrategyType = (tag: string): string => {
-    const lowerTag = tag.toLowerCase();
-    if (lowerTag.includes('iron condor')) return 'Iron Condor';
-    if (lowerTag.includes('double diagonal')) return 'Double Diagonal';
-    if (lowerTag.includes('strangle')) return 'Strangle';
-    if (lowerTag.includes('calendar')) return 'Calendar Spread';
-    if (lowerTag.includes('ratio spread')) return 'Ratio Spread';
-    if (lowerTag.includes('bear call') || lowerTag.includes('bull put')) return 'Credit Spread';
-    if (lowerTag.includes('bull call') || lowerTag.includes('bear put')) return 'Debit Spread';
-    if (lowerTag.includes('short put')) return 'Short Put';
-    if (lowerTag.includes('short call')) return 'Short Call';
-    if (lowerTag.includes('long put')) return 'Long Put';
-    if (lowerTag.includes('long call')) return 'Long Call';
-    return 'Altro';
-};
-
-const MetricCard = ({ icon, title, value, colorClass = 'text-white' }: { icon: React.ReactNode, title: string, value: string, colorClass?: string }) => (
-    <div className="bg-gray-700/50 p-4 rounded-lg flex items-start">
-        <div className="p-2 bg-gray-600/50 rounded-md mr-3 flex-shrink-0 text-gray-400">{icon}</div>
-        <div className="min-w-0 flex-1">
-            <p className="text-sm text-gray-400 font-medium mb-1">{title}</p>
-            <p className={`text-base font-bold font-mono ${colorClass} break-words`}>{value}</p>
+const MetricCard = ({ icon, title, value, colorClass = 'text-foreground' }: { icon: React.ReactNode, title: string, value: string, colorClass?: string }) => (
+    <div className="bg-muted/50 p-4 rounded-lg flex items-start">
+        <div className="p-2 bg-muted/50 rounded-md mr-4 text-muted-foreground">{icon}</div>
+        <div>
+            <p className="text-sm text-muted-foreground font-medium">{title}</p>
+            <p className={`text-xl font-bold font-mono ${colorClass}`}>{value}</p>
         </div>
     </div>
 );
 
-interface PortfolioAnalysisProps {
-    setCurrentView: (view: 'dashboard' | 'payoff' | 'greeks' | 'history' | 'settings' | 'detail' | 'analysis' | 'public' | 'test', structureId?: number | 'new' | null) => void;
-}
+const PortfolioAnalysis: React.FC = () => {
+    const { data: closedStructures, isLoading } = trpc.optionStructures.list.useQuery({
+        status: 'closed',
+    });
 
-const PortfolioAnalysis: React.FC<PortfolioAnalysisProps> = ({ setCurrentView }) => {
-    const { structures } = useStructures();
-    const closedStructures = structures.filter(s => s.status === 'closed');
-    const { initialCapital } = useSettingsStore(state => state.settings);
+    // Initial capital - hardcoded for now (can be moved to settings later)
+    const initialCapital = 10000;
 
     const equityChartData = useMemo(() => {
-        if (closedStructures.length === 0) return [];
-        const sortedStructures = [...closedStructures].sort((a, b) => new Date(a.closingDate!).getTime() - new Date(b.closingDate!).getTime());
+        if (!closedStructures || closedStructures.length === 0) return [];
+        const sortedStructures = [...closedStructures].sort((a, b) => {
+            const dateA = a.closingDate ? new Date(a.closingDate).getTime() : 0;
+            const dateB = b.closingDate ? new Date(b.closingDate).getTime() : 0;
+            return dateA - dateB;
+        });
         let cumulativePnl = 0;
         let peakEquity = initialCapital;
         const data = sortedStructures.map(structure => {
-            // FIXED: Ensure realizedPnl is treated as number
-            const pnl = typeof structure.realizedPnl === 'string' 
-                ? Number(structure.realizedPnl) 
-                : (structure.realizedPnl || 0);
-            cumulativePnl += pnl;
+            cumulativePnl += parseFloat(structure.realizedPnl || '0');
             const currentEquity = initialCapital + cumulativePnl;
             peakEquity = Math.max(peakEquity, currentEquity);
             const drawdown = currentEquity - peakEquity;
             return {
-                name: new Date(structure.closingDate!).toLocaleDateString('it-IT', { month: 'short', year: '2-digit' }),
+                name: structure.closingDate ? new Date(structure.closingDate).toLocaleDateString('it-IT', { month: 'short', year: '2-digit' }) : '',
                 tag: structure.tag,
                 equity: currentEquity,
                 drawdown: drawdown,
@@ -98,17 +79,13 @@ const PortfolioAnalysis: React.FC<PortfolioAnalysisProps> = ({ setCurrentView })
     }, [closedStructures, initialCapital]);
     
     const keyMetrics = useMemo(() => {
-        // Helper to safely get numeric realizedPnl
-        const getPnl = (s: any): number => {
-            if (typeof s.realizedPnl === 'string') return Number(s.realizedPnl) || 0;
-            return s.realizedPnl || 0;
-        };
+        if (!closedStructures) return { totalNetPnl: 0, profitFactor: 0, winRate: 0, avgWin: 0, avgLoss: 0, maxDrawdown: 0 };
         
-        const totalNetPnl = closedStructures.reduce((acc, s) => acc + getPnl(s), 0);
-        const winningTrades = closedStructures.filter(s => getPnl(s) > 0);
-        const losingTrades = closedStructures.filter(s => getPnl(s) < 0);
-        const grossProfit = winningTrades.reduce((acc, s) => acc + getPnl(s), 0);
-        const grossLoss = Math.abs(losingTrades.reduce((acc, s) => acc + getPnl(s), 0));
+        const totalNetPnl = closedStructures.reduce((acc, s) => acc + parseFloat(s.realizedPnl || '0'), 0);
+        const winningTrades = closedStructures.filter(s => parseFloat(s.realizedPnl || '0') > 0);
+        const losingTrades = closedStructures.filter(s => parseFloat(s.realizedPnl || '0') < 0);
+        const grossProfit = winningTrades.reduce((acc, s) => acc + parseFloat(s.realizedPnl || '0'), 0);
+        const grossLoss = Math.abs(losingTrades.reduce((acc, s) => acc + parseFloat(s.realizedPnl || '0'), 0));
         const profitFactor = grossLoss > 0 ? (grossProfit / grossLoss) : Infinity;
         const winRate = closedStructures.length > 0 ? (winningTrades.length / closedStructures.length) * 100 : 0;
         const avgWin = winningTrades.length > 0 ? grossProfit / winningTrades.length : 0;
@@ -119,15 +96,14 @@ const PortfolioAnalysis: React.FC<PortfolioAnalysisProps> = ({ setCurrentView })
     }, [closedStructures, equityChartData]);
 
     const monthlyPnlData = useMemo(() => {
+        if (!closedStructures) return [];
+        
         const pnlByMonth: { [key: string]: number } = {};
         closedStructures.forEach(structure => {
-            const closingDate = new Date(structure.closingDate!);
+            if (!structure.closingDate) return;
+            const closingDate = new Date(structure.closingDate);
             const monthKey = `${closingDate.getFullYear()}-${String(closingDate.getMonth() + 1).padStart(2, '0')}`;
-            // FIXED: Safe number conversion
-            const pnl = typeof structure.realizedPnl === 'string' 
-                ? Number(structure.realizedPnl) 
-                : (structure.realizedPnl || 0);
-            pnlByMonth[monthKey] = (pnlByMonth[monthKey] || 0) + pnl;
+            pnlByMonth[monthKey] = (pnlByMonth[monthKey] || 0) + parseFloat(structure.realizedPnl || '0');
         });
         return Object.entries(pnlByMonth).sort(([keyA], [keyB]) => keyA.localeCompare(keyB)).map(([key, pnl]) => ({
             name: new Date(key + '-02').toLocaleDateString('it-IT', { month: 'short', year: '2-digit' }),
@@ -136,23 +112,33 @@ const PortfolioAnalysis: React.FC<PortfolioAnalysisProps> = ({ setCurrentView })
     }, [closedStructures]);
     
     const individualPnlData = useMemo(() => {
-         return [...closedStructures].sort((a, b) => new Date(a.closingDate!).getTime() - new Date(b.closingDate!).getTime()).map(structure => ({
+        if (!closedStructures) return [];
+        
+        return [...closedStructures].sort((a, b) => {
+            const dateA = a.closingDate ? new Date(a.closingDate).getTime() : 0;
+            const dateB = b.closingDate ? new Date(b.closingDate).getTime() : 0;
+            return dateA - dateB;
+        }).map(structure => ({
             name: structure.tag,
-            // FIXED: Safe number conversion
-            pnl: typeof structure.realizedPnl === 'string' 
-                ? Number(structure.realizedPnl) 
-                : (structure.realizedPnl || 0)
+            pnl: parseFloat(structure.realizedPnl || '0')
         }));
     }, [closedStructures]);
 
-    if (closedStructures.length === 0) {
+    if (isLoading) {
+        return (
+            <div className="max-w-7xl mx-auto">
+                <div className="flex items-center justify-center py-16">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-sky-500"></div>
+                </div>
+            </div>
+        );
+    }
+
+    if (!closedStructures || closedStructures.length === 0) {
         return (
              <div className="max-w-4xl mx-auto text-center py-10">
-                <h1 className="text-3xl font-bold text-white mb-4">Analisi di Portafoglio</h1>
-                <p className="text-gray-400">Nessuna struttura chiusa trovata per generare le analisi.</p>
-                 <button onClick={() => setCurrentView('dashboard')} className="mt-6 bg-accent hover:bg-accent/80 text-white font-semibold py-2 px-4 rounded-md transition">
-                    &larr; Torna alla Lista
-                </button>
+                <h1 className="text-3xl font-bold text-foreground mb-4">Analisi di Portafoglio</h1>
+                <p className="text-muted-foreground">Nessuna struttura chiusa trovata per generare le analisi.</p>
             </div>
         );
     }
@@ -163,26 +149,23 @@ const PortfolioAnalysis: React.FC<PortfolioAnalysisProps> = ({ setCurrentView })
     return (
         <div className="max-w-7xl mx-auto">
             <div className="flex justify-between items-center mb-6">
-                <h1 className="text-3xl font-bold text-white">Dashboard di Performance</h1>
-                <button onClick={() => setCurrentView('dashboard')} className="text-accent hover:underline">
-                    &larr; Torna alla Lista
-                </button>
+                <h1 className="text-3xl font-bold text-foreground">Dashboard di Performance</h1>
             </div>
             <div className="space-y-8">
-                 <div className="bg-gray-800 rounded-lg p-4">
-                    <h2 className="text-xl font-bold text-white mb-4">Metriche Chiave</h2>
+                 <div className="bg-card rounded-lg p-4">
+                    <h2 className="text-xl font-bold text-foreground mb-4">Metriche Chiave</h2>
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                        <MetricCard icon={<TrendingUpIcon />} title="P&L Netto Totale" value={keyMetrics.totalNetPnl.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })} colorClass={keyMetrics.totalNetPnl >= 0 ? 'text-profit' : 'text-loss'} />
-                        <MetricCard icon={<ScaleIcon />} title="Profit Factor" value={isFinite(keyMetrics.profitFactor) ? keyMetrics.profitFactor.toFixed(2) : '∞'} colorClass={keyMetrics.profitFactor >= 1 ? 'text-profit' : 'text-loss'} />
-                        <MetricCard icon={<CheckBadgeIcon />} title="Win Rate" value={`${keyMetrics.winRate.toFixed(1)}%`} colorClass="text-accent"/>
-                        <MetricCard icon={<PlusCircleIcon />} title="Vincita Media" value={keyMetrics.avgWin.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })} colorClass="text-profit"/>
-                        <MetricCard icon={<MinusCircleIcon />} title="Perdita Media" value={keyMetrics.avgLoss.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })} colorClass="text-loss"/>
-                        <MetricCard icon={<TrendingDownIcon />} title="Max Drawdown" value={keyMetrics.maxDrawdown.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })} colorClass="text-loss"/>
+                        <MetricCard icon={<TrendingUp className="w-5 h-5" />} title="P&L Netto Totale" value={keyMetrics.totalNetPnl.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })} colorClass={keyMetrics.totalNetPnl >= 0 ? 'text-profit' : 'text-loss'} />
+                        <MetricCard icon={<Scale className="w-5 h-5" />} title="Profit Factor" value={isFinite(keyMetrics.profitFactor) ? keyMetrics.profitFactor.toFixed(2) : '∞'} colorClass={keyMetrics.profitFactor >= 1 ? 'text-profit' : 'text-loss'} />
+                        <MetricCard icon={<CheckCircle className="w-5 h-5" />} title="Win Rate" value={`${keyMetrics.winRate.toFixed(1)}%`} colorClass="text-accent"/>
+                        <MetricCard icon={<PlusCircle className="w-5 h-5" />} title="Vincita Media" value={keyMetrics.avgWin.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })} colorClass="text-profit"/>
+                        <MetricCard icon={<MinusCircle className="w-5 h-5" />} title="Perdita Media" value={keyMetrics.avgLoss.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })} colorClass="text-loss"/>
+                        <MetricCard icon={<TrendingDown className="w-5 h-5" />} title="Max Drawdown" value={keyMetrics.maxDrawdown.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })} colorClass="text-loss"/>
                     </div>
                 </div>
 
-                <div className="bg-gray-800 rounded-lg p-4">
-                    <h2 className="text-2xl font-bold text-white mb-4">Equity Line & Drawdown</h2>
+                <div className="bg-card rounded-lg p-4">
+                    <h2 className="text-2xl font-bold text-foreground mb-4">Equity Line & Drawdown</h2>
                     <ResponsiveContainer width="100%" height={700}>
                         <ComposedChart data={equityChartData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
                             <CartesianGrid strokeDasharray="3 3" stroke="#444444" />
@@ -197,8 +180,8 @@ const PortfolioAnalysis: React.FC<PortfolioAnalysisProps> = ({ setCurrentView })
                     </ResponsiveContainer>
                 </div>
                 
-                <div className="bg-gray-800 rounded-lg p-4">
-                    <h2 className="text-2xl font-bold text-white mb-4">Analisi Temporale (P&L per Mese)</h2>
+                <div className="bg-card rounded-lg p-4">
+                    <h2 className="text-2xl font-bold text-foreground mb-4">Analisi Temporale (P&L per Mese)</h2>
                     <ResponsiveContainer width="100%" height={350}>
                             <BarChart data={monthlyPnlData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
                             <CartesianGrid strokeDasharray="3 3" stroke="#444444" vertical={false} />
@@ -215,8 +198,8 @@ const PortfolioAnalysis: React.FC<PortfolioAnalysisProps> = ({ setCurrentView })
                     </ResponsiveContainer>
                 </div>
 
-                <div className="bg-gray-800 rounded-lg p-4">
-                    <h2 className="text-2xl font-bold text-white mb-4">Distribuzione P&L per Operazione</h2>
+                <div className="bg-card rounded-lg p-4">
+                    <h2 className="text-2xl font-bold text-foreground mb-4">Distribuzione P&L per Operazione</h2>
                     <div className="w-full overflow-x-auto">
                         <ResponsiveContainer width={Math.max(individualPnlData.length * barWidth, 400)} height={350}>
                             <BarChart data={individualPnlData} margin={{ top: 5, right: 20, left: 0, bottom: 80 }}>

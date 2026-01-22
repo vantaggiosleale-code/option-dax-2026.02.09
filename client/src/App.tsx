@@ -14,7 +14,7 @@ import { SimpleGraphicTest } from './components/SimpleGraphicTest';
 import { Sidebar } from './components/Sidebar';
 import PayoffSimulator from './components/PayoffSimulator';
 import GreeksCalculator from './components/GreeksCalculator';
-import History from './components/History';
+// History.tsx rimosso - sostituito con PortfolioAnalysis
 
 const App: React.FC = () => {
     const [currentView, setCurrentView] = React.useState<'dashboard' | 'payoff' | 'greeks' | 'history' | 'settings' | 'detail' | 'analysis' | 'public' | 'test'>('dashboard');
@@ -52,13 +52,13 @@ const App: React.FC = () => {
             case 'greeks':
                 return <GreeksCalculator />;
             case 'history':
-                return <History />;
+                return <PortfolioAnalysis />;
             case 'detail':
                 return <StructureDetailView structureId={currentStructureId} setCurrentView={handleSetCurrentView} />;
             case 'settings':
                 return <SettingsView setCurrentView={handleSetCurrentView} />;
             case 'analysis':
-                return <PortfolioAnalysis setCurrentView={handleSetCurrentView} />;
+                return <PortfolioAnalysis />;
             case 'public':
                 return <PublicStructuresView setCurrentView={handleSetCurrentView} />;
             case 'test':
@@ -82,7 +82,7 @@ const App: React.FC = () => {
                     {isAuthenticated && (
                         <button
                             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                            className="md:hidden p-2 text-gray-300 hover:text-white hover:bg-gray-700 rounded-lg transition"
+                            className="md:hidden p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition"
                             aria-label="Toggle menu"
                         >
                             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -94,7 +94,7 @@ const App: React.FC = () => {
                         {!loading && (
                             isAuthenticated ? (
                                 <div className="flex items-center space-x-3">
-                                    <span className="text-sm text-gray-900 font-medium">{user?.name || user?.email}</span>
+                                    <span className="text-sm text-foreground font-medium">{user?.name || user?.email}</span>
                                     <button
                                         onClick={handleLogout}
                                         className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition"
