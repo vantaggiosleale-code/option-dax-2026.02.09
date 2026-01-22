@@ -65,7 +65,7 @@ const MetricCard = ({ icon, title, value, colorClass = 'text-white' }: { icon: R
 );
 
 interface PortfolioAnalysisProps {
-    setCurrentView: (view: 'list' | 'detail' | 'settings' | 'analysis' | 'public', structureId?: number | 'new' | null) => void;
+    setCurrentView: (view: 'dashboard' | 'payoff' | 'greeks' | 'history' | 'settings' | 'detail' | 'analysis' | 'public' | 'test', structureId?: number | 'new' | null) => void;
 }
 
 const PortfolioAnalysis: React.FC<PortfolioAnalysisProps> = ({ setCurrentView }) => {
@@ -150,7 +150,7 @@ const PortfolioAnalysis: React.FC<PortfolioAnalysisProps> = ({ setCurrentView })
              <div className="max-w-4xl mx-auto text-center py-10">
                 <h1 className="text-3xl font-bold text-white mb-4">Analisi di Portafoglio</h1>
                 <p className="text-gray-400">Nessuna struttura chiusa trovata per generare le analisi.</p>
-                 <button onClick={() => setCurrentView('list')} className="mt-6 bg-accent hover:bg-accent/80 text-white font-semibold py-2 px-4 rounded-md transition">
+                 <button onClick={() => setCurrentView('dashboard')} className="mt-6 bg-accent hover:bg-accent/80 text-white font-semibold py-2 px-4 rounded-md transition">
                     &larr; Torna alla Lista
                 </button>
             </div>
@@ -164,7 +164,7 @@ const PortfolioAnalysis: React.FC<PortfolioAnalysisProps> = ({ setCurrentView })
         <div className="max-w-7xl mx-auto">
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-3xl font-bold text-white">Dashboard di Performance</h1>
-                <button onClick={() => setCurrentView('list')} className="text-accent hover:underline">
+                <button onClick={() => setCurrentView('dashboard')} className="text-accent hover:underline">
                     &larr; Torna alla Lista
                 </button>
             </div>

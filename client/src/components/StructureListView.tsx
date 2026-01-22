@@ -90,7 +90,7 @@ const calculateUnrealizedPnlForStructure = (structure: Structure, marketData: Ma
 
 
 interface StructureListViewProps {
-    setCurrentView: (view: 'list' | 'detail' | 'settings' | 'analysis' | 'public', structureId?: number | 'new' | null) => void;
+    setCurrentView: (view: 'dashboard' | 'payoff' | 'greeks' | 'history' | 'settings' | 'detail' | 'analysis' | 'public' | 'test', structureId?: number | 'new' | null) => void;
 }
 
 const StructureListView: React.FC<StructureListViewProps> = ({ setCurrentView }) => {
@@ -188,7 +188,7 @@ const StructureListView: React.FC<StructureListViewProps> = ({ setCurrentView })
             />
             <div className={`max-w-4xl mx-auto space-y-8 ${isBulkEditMode && selectedIds.size > 0 ? 'pb-24' : ''}`}>
 
-                 <div className="bg-gray-800 rounded-lg p-4">
+                 <div className="bg-[#1a1a1f] border border-[#2a2a2f] rounded-lg p-4">
                     <div className="flex flex-wrap gap-y-3 justify-between items-center mb-4">
                         <div className="flex items-center space-x-3">
                             <PortfolioIcon />
@@ -226,7 +226,7 @@ const StructureListView: React.FC<StructureListViewProps> = ({ setCurrentView })
                             </div>
                         </div>
                     </div>
-                    <div className="bg-gray-700 p-4 rounded-md grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
+                    <div className="bg-[#0a0a0f] border border-[#2a2a2f] p-4 rounded-lg grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
                          <div>
                             <span className="text-sm text-gray-400">P/L Aperto Totale</span>
                             <p className={`font-mono text-lg md:text-xl font-bold ${totalPortfolioUnrealizedPnl >= 0 ? 'text-profit' : 'text-loss'}`}>
@@ -252,7 +252,7 @@ const StructureListView: React.FC<StructureListViewProps> = ({ setCurrentView })
                     </div>
                 </div>
 
-                <div className="bg-gray-800 rounded-lg p-4">
+                <div className="bg-[#1a1a1f] border border-[#2a2a2f] rounded-lg p-4">
                     <div className="flex flex-wrap gap-y-3 justify-between items-center mb-4">
                         <h1 className="text-2xl font-bold text-white">Strutture Attive</h1>
                         <div className="flex items-center space-x-2">
@@ -291,7 +291,7 @@ const StructureListView: React.FC<StructureListViewProps> = ({ setCurrentView })
                                 return (
                                     <div 
                                         key={structure.id} 
-                                        className="bg-gray-700 p-3 rounded-md cursor-pointer hover:bg-gray-600/70 transition flex flex-col sm:flex-row sm:justify-between sm:items-center"
+                                        className="bg-[#1a1a1f] border border-[#2a2a2f] p-4 rounded-lg cursor-pointer hover:border-sky-500/50 transition-all flex flex-col sm:flex-row sm:justify-between sm:items-center"
                                         onClick={() => setCurrentView('detail', structure.id)}
                                     >
                                         <div className="flex-shrink-0 mb-3 sm:mb-0 w-full sm:w-auto">
@@ -340,7 +340,7 @@ const StructureListView: React.FC<StructureListViewProps> = ({ setCurrentView })
                     </div>
                 </div>
 
-                <div className="bg-gray-800 rounded-lg p-4">
+                <div className="bg-[#1a1a1f] border border-[#2a2a2f] rounded-lg p-4">
                     <div className="flex justify-between items-center mb-4">
                         <div className="flex items-center space-x-3">
                             <ArchiveIcon />
@@ -379,7 +379,7 @@ const StructureListView: React.FC<StructureListViewProps> = ({ setCurrentView })
                                 return (
                                     <div
                                         key={structure.id}
-                                        className={`rounded-md flex items-center transition cursor-pointer ${isBulkEditMode ? (isSelected ? 'bg-accent/20 border border-accent/50' : 'bg-gray-700 hover:bg-gray-600/70') : 'bg-gray-700/50 hover:bg-gray-600/70'}`}
+                                        className={`rounded-lg flex items-center transition-all cursor-pointer ${isBulkEditMode ? (isSelected ? 'bg-sky-500/10 border-2 border-sky-500' : 'bg-[#1a1a1f] border border-[#2a2a2f] hover:border-sky-500/50') : 'bg-[#1a1a1f] border border-[#2a2a2f] hover:border-sky-500/50'}`}
                                         onClick={() => {
                                             if (isBulkEditMode) {
                                                 handleSelect(structure.id);
@@ -416,7 +416,7 @@ const StructureListView: React.FC<StructureListViewProps> = ({ setCurrentView })
                                                             e.stopPropagation();
                                                             setGraphicModalStructure({ id: structure.id, tag: structure.tag, isClosed: true });
                                                         }}
-                                                        className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg flex items-center space-x-2 transition"
+                                                        className="bg-sky-500 hover:bg-sky-600 text-white font-semibold py-2 px-4 rounded-lg flex items-center space-x-2 transition-colors"
                                                     >
                                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                                             <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />

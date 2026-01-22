@@ -7,7 +7,7 @@ import { CloudDownloadIcon, TrendingUpIcon, TrendingDownIcon } from 'lucide-reac
 import { toast } from 'sonner';
 
 interface PublicStructuresViewProps {
-  setCurrentView: (view: 'list' | 'detail' | 'settings' | 'analysis' | 'public', structureId?: number | 'new' | null) => void;
+  setCurrentView: (view: 'dashboard' | 'payoff' | 'greeks' | 'history' | 'settings' | 'detail' | 'analysis' | 'public' | 'test', structureId?: number | 'new' | null) => void;
 }
 
 const PublicStructuresView: React.FC<PublicStructuresViewProps> = ({ setCurrentView }) => {
@@ -51,7 +51,7 @@ const PublicStructuresView: React.FC<PublicStructuresViewProps> = ({ setCurrentV
           <h1 className="text-3xl font-bold text-foreground">Strutture Pubbliche</h1>
           <p className="text-muted-foreground">Esplora e importa strutture condivise dagli admin</p>
         </div>
-        <Button variant="outline" onClick={() => setCurrentView('list')}>
+        <Button variant="outline" onClick={() => setCurrentView('dashboard')}>
           Torna alle Mie Strutture
         </Button>
       </div>

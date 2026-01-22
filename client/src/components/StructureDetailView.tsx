@@ -30,7 +30,7 @@ const ReopenIcon = () => (
 
 interface StructureDetailViewProps {
     structureId: number | 'new' | null;
-    setCurrentView: (view: 'list' | 'detail' | 'settings' | 'analysis' | 'public', structureId?: number | 'new' | null) => void;
+    setCurrentView: (view: 'dashboard' | 'payoff' | 'greeks' | 'history' | 'settings' | 'detail' | 'analysis' | 'public' | 'test', structureId?: number | 'new' | null) => void;
 }
 
 const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, setCurrentView }) => {
@@ -252,7 +252,7 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
                 // Invalida la query per aggiornare la lista
                 utils.optionStructures.list.invalidate();
             }
-            setCurrentView('list');
+            setCurrentView('dashboard');
         } catch (error) {
             console.error('Errore durante il salvataggio:', error);
             alert(`Errore durante il salvataggio: ${error}`);
@@ -263,7 +263,7 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
         if (!localStructure || !('id' in localStructure) || isReadOnly) return;
         try {
             await closeStructure(localStructure.id, marketData.daxSpot, marketData.riskFreeRate);
-            setCurrentView('list');
+            setCurrentView('dashboard');
         } catch (error) {
             console.error('Errore durante la chiusura:', error);
             alert(`Errore durante la chiusura: ${error}`);
@@ -274,7 +274,7 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
         if (!localStructure || !('id' in localStructure)) return;
         if (window.confirm(`Sei sicuro di voler eliminare permanentemente la struttura "${localStructure.tag}"? Questa azione è irreversibile.`)) {
             deleteStructure(localStructure.id);
-            setCurrentView('list');
+            setCurrentView('dashboard');
         }
     };
     
@@ -437,7 +437,7 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
     return (
         <div className="space-y-4">
             <div className="flex justify-between items-center">
-                <button onClick={() => setCurrentView('list')} className="text-accent hover:underline">
+                <button onClick={() => setCurrentView('dashboard')} className="text-accent hover:underline">
                     &larr; Torna alla Lista
                 </button>
                  <div className="flex items-center space-x-2">

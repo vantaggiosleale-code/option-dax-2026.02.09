@@ -4,7 +4,7 @@ import useSettingsStore from '../store/settingsStore';
 import { Settings } from '../types';
 
 interface SettingsViewProps {
-    setCurrentView: (view: 'list' | 'detail' | 'settings' | 'analysis' | 'public', structureId?: number | 'new' | null) => void;
+    setCurrentView: (view: 'dashboard' | 'payoff' | 'greeks' | 'history' | 'settings' | 'detail' | 'analysis' | 'public' | 'test', structureId?: number | 'new' | null) => void;
 }
 
 const SettingsView: React.FC<SettingsViewProps> = ({ setCurrentView }) => {
@@ -33,7 +33,7 @@ const SettingsView: React.FC<SettingsViewProps> = ({ setCurrentView }) => {
 
     return (
         <div className="max-w-2xl mx-auto space-y-6">
-            <button onClick={() => setCurrentView('list')} className="text-accent hover:underline mb-4">
+            <button onClick={() => setCurrentView('dashboard')} className="text-accent hover:underline mb-4">
                 &larr; Torna alla Lista
             </button>
 

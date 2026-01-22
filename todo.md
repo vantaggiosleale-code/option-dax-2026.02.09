@@ -353,3 +353,16 @@
 - [x] Mostrare solo "Chiusura" per strutture chiuse
 - [x] Calcolare correttamente openingDate, closingDate, duration per grafica chiusura
 - [ ] Testare generazione grafica chiusura
+
+## 🎨 Redesign UI Professional Premium
+- [ ] Definire nuova palette colori (nero profondo #0a0a0f, blu elettrico #0ea5e9, verde #10b981, rosso #ef4444)
+- [ ] Aggiornare CSS variables in index.css con design system premium
+- [ ] Creare componente Sidebar con navigazione moderna (Dashboard, Simulatore Payoff, Calcolatore Greche, Storico)
+- [ ] Ridisegnare App.tsx con layout sidebar + main content
+- [ ] Ridisegnare card strutture con stile premium (bordi sottili, ombre profonde, NO glassmorphism)
+- [ ] Migliorare tipografia (Inter font, gerarchia chiara, monospace per numeri)
+- [ ] Rimuovere emoji e sostituire con icone minimali Lucide React
+- [ ] Aggiornare spacing e padding per look più ariato
+- [ ] Ridisegnare grafici payoff con stile premium (linee sharp, colori solidi)
+- [ ] Testare redesign su tutte le pagine
+- [ ] Salvare checkpoint redesign premium
