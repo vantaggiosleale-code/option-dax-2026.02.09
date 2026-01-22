@@ -70,15 +70,7 @@ const App: React.FC = () => {
 
     return (
         <div className="bg-background text-foreground font-sans min-h-screen flex">
-            {/* Mobile Overlay (renderizzato PRIMA della sidebar per stacking corretto) */}
-            {isAuthenticated && isSidebarOpen && (
-                <div 
-                    className="fixed inset-0 bg-black/65 z-50 md:hidden"
-                    onClick={() => setIsSidebarOpen(false)}
-                />
-            )}
-            
-            {/* Sidebar (renderizzata DOPO l'overlay per stare sopra) */}
+            {/* Sidebar */}
             {isAuthenticated && (
                 <Sidebar currentView={currentView} onNavigate={(view) => { handleNavigate(view); setIsSidebarOpen(false); }} isOpen={isSidebarOpen} />
             )}

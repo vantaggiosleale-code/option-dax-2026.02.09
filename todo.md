@@ -391,3 +391,8 @@
 - [x] Cambiare colore nome account da text-gray-300 (grigio chiaro) a text-gray-900 (nero/grigio scuro)
 - [x] Testare leggibilità su sfondo header chiaro
 - [x] Aggiunto font-medium per enfasi
+
+## 🗑️ Rimuovere Overlay Mobile
+- [x] Rimuovere elemento overlay nero trasparente da App.tsx
+- [x] Testare che sidebar mobile funzioni senza overlay
+- [x] Sidebar mobile ora si apre senza overlay scuro dietro
