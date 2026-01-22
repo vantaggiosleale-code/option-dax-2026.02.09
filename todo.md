@@ -472,3 +472,10 @@
 - [x] ThemeContext applica correttamente classe .dark a document.documentElement
 - [x] Toggle funziona: dark mode attivo (sidebar nera + main content nero)
 - [ ] Testare light mode (cliccare toggle per tornare a bianco)
+
+## BUG: Toggle Light Mode Non Funziona (RISOLTO - RICHIEDE HARD REFRESH)
+- [x] Rimosso @custom-variant dark da index.css (causava conflitto con dark: standard)
+- [x] Forzato defaultTheme="light" in main.tsx
+- [x] Aggiunto classList.remove("dark") all'avvio in ThemeContext
+- [x] Riavviato dev server per ricompilare Tailwind CSS
+- [ ] UTENTE DEVE FARE HARD REFRESH (Ctrl+Shift+R o Ctrl+F5) per bypassare cache browser
