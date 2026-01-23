@@ -613,3 +613,14 @@
 - Text secondario: text-gray-600 → dark:text-gray-300
 - Labels: text-gray-700 → dark:text-gray-300
 - Borders: border-gray-200 → dark:border-gray-700
+
+## 🎨 Fix Testi StructureListView Dark Mode (COMPLETATO)
+- [x] Analizzato StructureListView.tsx per identificare testi grigi chiari
+- [x] Modificato colore textSecondary dark mode: #d1d5db (chiaro) → #6b7280 (scuro)
+- [x] Fix applicato a:
+  * Riga 221-232: Pulsanti +/-10, +/-1 e testo "Spot DAX:"
+  * Riga 215: Testo "Spot DAX:" label
+  * Tutti gli elementi che usano textSecondary
+- [x] HMR applicato con successo
+- [ ] Testare dark mode manualmente (cliccare toggle)
+- [ ] Salvare checkpoint
