@@ -2,7 +2,6 @@ import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine, ReferenceDot } from 'recharts';
 import { MarketData, OptionLeg } from '../types';
 import { BlackScholes, getTimeToExpiry } from '../services/blackScholes';
-import { useTheme } from '../contexts/ThemeContext';
 
 interface PayoffChartProps {
   legs: OptionLeg[];
@@ -13,7 +12,7 @@ interface PayoffChartProps {
 const Diamond = (props: any) => {
     const { cx, cy, fill, stroke, strokeWidth } = props;
     if (cx === undefined || cy === undefined) return null;
-    const size = 6;
+    const size = 6; // half-width/height of the diamond
     return (
         <path
             transform={`translate(${cx}, ${cy})`}
@@ -43,26 +42,14 @@ const ZoomOutIcon = () => (
     </svg>
 );
 
-// Theme-aware chart colors
-const getChartColors = (isDark: boolean) => ({
-    grid: isDark ? '#374151' : '#e5e7eb',
-    axis: isDark ? '#9ca3af' : '#6b7280',
-    zeroLine: isDark ? '#6b7280' : '#9ca3af',
-    tooltipBg: isDark ? '#1f2937' : '#ffffff',
-    tooltipBorder: isDark ? '#374151' : '#e5e7eb',
-    tooltipText: isDark ? '#f3f4f6' : '#111827',
-});
 
 const PayoffChart: React.FC<PayoffChartProps> = ({ legs, marketData, multiplier }) => {
-    const { theme } = useTheme();
-    const isDark = theme === 'dark';
-    const colors = getChartColors(isDark);
-
+    // Create a stable key from legs to force recalculation
     const legsKey = useMemo(() => {
-        return JSON.stringify(legs.map(l => ({
-            id: l.id,
-            strike: l.strike,
-            quantity: l.quantity,
+        return JSON.stringify(legs.map(l => ({ 
+            id: l.id, 
+            strike: l.strike, 
+            quantity: l.quantity, 
             optionType: l.optionType,
             tradePrice: l.tradePrice,
             expiryDate: l.expiryDate,
@@ -79,8 +66,9 @@ const PayoffChart: React.FC<PayoffChartProps> = ({ legs, marketData, multiplier 
         const strikes = legs.map(leg => leg.strike);
         const minStrike = Math.min(...strikes);
         const maxStrike = Math.max(...strikes);
+        // FIX: Aumentato il buffer per una migliore visualizzazione iniziale, garantendo che i breakeven siano probabilmente inclusi.
         const strategyWidth = maxStrike - minStrike;
-        const buffer = Math.max(strategyWidth * 0.5, marketData.daxSpot * 0.05);
+        const buffer = Math.max(strategyWidth * 0.5, marketData.daxSpot * 0.05); 
 
         return [minStrike - buffer, maxStrike + buffer];
     }, [legsKey, marketData.daxSpot, legs.length]);
@@ -97,31 +85,35 @@ const PayoffChart: React.FC<PayoffChartProps> = ({ legs, marketData, multiplier 
         const currentSpot = marketData.daxSpot;
         let pnlAtExpiryPoints = 0;
         let pnlTodayPoints = 0;
+        
+        // Calculate realized P&L from closed legs as fixed offset
         let realizedPnlOffset = 0;
 
         legs.forEach((leg: OptionLeg) => {
             const isClosed = leg.closingPrice !== null && leg.closingPrice !== undefined;
-
+            
             if (isClosed) {
+                // For closed legs, add realized P&L as fixed offset
                 let pnlPoints = 0;
-                if (leg.quantity > 0) {
+                if (leg.quantity > 0) { // Long
                     pnlPoints = (leg.closingPrice! - leg.tradePrice) * leg.quantity;
-                } else {
+                } else { // Short
                     pnlPoints = (leg.tradePrice - leg.closingPrice!) * Math.abs(leg.quantity);
                 }
+                // Convert to euro and subtract commissions (assuming default 2€ per leg)
                 const grossPnl = pnlPoints * multiplier;
-                const commissions = 4 * Math.abs(leg.quantity);
+                const commissions = 4 * Math.abs(leg.quantity); // opening + closing commission
                 realizedPnlOffset += (grossPnl - commissions);
-                return;
+                return; // Skip rest of calculation for closed legs
             }
 
             const expiryValue = leg.optionType === 'Call'
                 ? Math.max(0, currentSpot - leg.strike)
                 : Math.max(0, leg.strike - currentSpot);
 
-            if (leg.quantity > 0) {
+            if (leg.quantity > 0) { // Long
                 pnlAtExpiryPoints += (expiryValue - leg.tradePrice) * leg.quantity;
-            } else {
+            } else { // Short
                 pnlAtExpiryPoints += (leg.tradePrice - expiryValue) * Math.abs(leg.quantity);
             }
 
@@ -129,16 +121,16 @@ const PayoffChart: React.FC<PayoffChartProps> = ({ legs, marketData, multiplier 
             if (timeToExpiry > 0) {
                 const bs = new BlackScholes(currentSpot, leg.strike, timeToExpiry, marketData.riskFreeRate, leg.impliedVolatility);
                 const currentPrice = leg.optionType === 'Call' ? bs.callPrice() : bs.putPrice();
-
-                if (leg.quantity > 0) {
+                
+                if (leg.quantity > 0) { // Long
                     pnlTodayPoints += (currentPrice - leg.tradePrice) * leg.quantity;
-                } else {
+                } else { // Short
                     pnlTodayPoints += (leg.tradePrice - currentPrice) * Math.abs(leg.quantity);
                 }
-            } else {
-                if (leg.quantity > 0) {
+            } else { 
+                if (leg.quantity > 0) { // Long
                     pnlTodayPoints += (expiryValue - leg.tradePrice) * leg.quantity;
-                } else {
+                } else { // Short
                     pnlTodayPoints += (leg.tradePrice - expiryValue) * Math.abs(leg.quantity);
                 }
             }
@@ -153,18 +145,19 @@ const PayoffChart: React.FC<PayoffChartProps> = ({ legs, marketData, multiplier 
     const chartData = useMemo(() => {
         if (legs.length === 0) return [];
 
-        const [minPrice, maxPrice] = xDomain;
+        const [minPrice, maxPrice] = xDomain; // Usa il dominio zoomabile
         const steps = 200;
         const stepSize = (maxPrice - minPrice) / steps;
-
+        
+        // Calculate realized P&L from closed legs as fixed offset
         let realizedPnlOffset = 0;
         legs.forEach((leg: OptionLeg) => {
             const isClosed = leg.closingPrice !== null && leg.closingPrice !== undefined;
             if (isClosed) {
                 let pnlPoints = 0;
-                if (leg.quantity > 0) {
+                if (leg.quantity > 0) { // Long
                     pnlPoints = (leg.closingPrice! - leg.tradePrice) * leg.quantity;
-                } else {
+                } else { // Short
                     pnlPoints = (leg.tradePrice - leg.closingPrice!) * Math.abs(leg.quantity);
                 }
                 const grossPnl = pnlPoints * multiplier;
@@ -172,7 +165,7 @@ const PayoffChart: React.FC<PayoffChartProps> = ({ legs, marketData, multiplier 
                 realizedPnlOffset += (grossPnl - commissions);
             }
         });
-
+        
         const data = [];
 
         for (let i = 0; i <= steps; i++) {
@@ -182,15 +175,15 @@ const PayoffChart: React.FC<PayoffChartProps> = ({ legs, marketData, multiplier 
 
         legs.forEach((leg: OptionLeg) => {
             const isClosed = leg.closingPrice !== null && leg.closingPrice !== undefined;
-            if (isClosed) return;
+            if (isClosed) return; // Skip closed legs in curve calculation
 
             const expiryValue = leg.optionType === 'Call'
                 ? Math.max(0, currentSpot - leg.strike)
                 : Math.max(0, leg.strike - currentSpot);
 
-            if (leg.quantity > 0) {
+            if (leg.quantity > 0) { // Long
                 pnlAtExpiryPoints += (expiryValue - leg.tradePrice) * leg.quantity;
-            } else {
+            } else { // Short
                 pnlAtExpiryPoints += (leg.tradePrice - expiryValue) * Math.abs(leg.quantity);
             }
 
@@ -198,49 +191,49 @@ const PayoffChart: React.FC<PayoffChartProps> = ({ legs, marketData, multiplier 
             if (timeToExpiry > 0) {
                 const bs = new BlackScholes(currentSpot, leg.strike, timeToExpiry, marketData.riskFreeRate, leg.impliedVolatility);
                 const currentPrice = leg.optionType === 'Call' ? bs.callPrice() : bs.putPrice();
-
-                if (leg.quantity > 0) {
+                
+                if (leg.quantity > 0) { // Long
                     pnlTodayPoints += (currentPrice - leg.tradePrice) * leg.quantity;
-                } else {
+                } else { // Short
                     pnlTodayPoints += (leg.tradePrice - currentPrice) * Math.abs(leg.quantity);
                 }
 
-            } else {
-                if (leg.quantity > 0) {
+            } else { 
+                if (leg.quantity > 0) { // Long
                     pnlTodayPoints += (expiryValue - leg.tradePrice) * leg.quantity;
-                } else {
+                } else { // Short
                     pnlTodayPoints += (leg.tradePrice - expiryValue) * Math.abs(leg.quantity);
                 }
             }
         });
-
-        data.push({
-            spot: currentSpot,
+        
+        data.push({ 
+            spot: currentSpot, 
             pnlAtExpiry: pnlAtExpiryPoints * multiplier + realizedPnlOffset,
             pnlToday: pnlTodayPoints * multiplier + realizedPnlOffset
-            });
+            }); 
         }
         return data;
     }, [legs, marketData, xDomain, multiplier]);
-
+    
     const handleWheel = useCallback((e: any) => {
         e.preventDefault();
         const { deltaY, chartX } = e;
         const [domainMin, domainMax] = xDomain;
         const range = domainMax - domainMin;
-
+        
         if (!chartX) return;
-
+        
         const chartWidth = e.view.width;
         const mouseRatio = (chartX - e.chartLayout.left) / e.chartLayout.width;
         const mouseValue = domainMin + range * mouseRatio;
 
         const zoomFactor = deltaY > 0 ? 1.1 : 0.9;
         const newRange = range * zoomFactor;
-
+        
         const newDomainMin = mouseValue - newRange * mouseRatio;
         const newDomainMax = mouseValue + newRange * (1 - mouseRatio);
-
+        
         const newDomain: [number, number] = [newDomainMin, newDomainMax];
         setXDomain(newDomain);
 
@@ -259,18 +252,11 @@ const PayoffChart: React.FC<PayoffChartProps> = ({ legs, marketData, multiplier 
     const CustomTooltip = ({ active, payload, label }: any) => {
         if (active && payload && payload.length) {
         return (
-            <div
-                className="p-2 rounded-md shadow-lg text-sm"
-                style={{
-                    backgroundColor: colors.tooltipBg,
-                    border: `1px solid ${colors.tooltipBorder}`,
-                    color: colors.tooltipText,
-                }}
-            >
-            <p className="font-bold">{`Spot DAX: \u20AC${label.toFixed(2)}`}</p>
+            <div className="bg-gray-900 p-2 border border-gray-600 rounded-md shadow-lg text-sm">
+            <p className="font-bold text-gray-200">{`Spot DAX: €${label.toFixed(2)}`}</p>
             {payload.map((pld: any) => (
                 <p key={pld.dataKey} style={{color: pld.stroke}}>
-                    {pld.name}: &euro;{pld.value.toFixed(2)}
+                    {pld.name}: €{pld.value.toFixed(2)}
                 </p>
             ))}
             </div>
@@ -284,7 +270,7 @@ const PayoffChart: React.FC<PayoffChartProps> = ({ legs, marketData, multiplier 
         <div className="absolute top-0 right-0 z-10 flex flex-col items-end pointer-events-auto">
             <button
                 onClick={() => setXDomain(initialXDomain)}
-                className="bg-secondary hover:bg-muted text-muted-foreground px-2 py-1 text-xs rounded-bl-md border border-border"
+                className="bg-gray-700 hover:bg-gray-600 text-gray-300 px-2 py-1 text-xs rounded-bl-md"
                 title="Reset Zoom"
             >
                 <ResetIcon />
@@ -292,14 +278,14 @@ const PayoffChart: React.FC<PayoffChartProps> = ({ legs, marketData, multiplier 
             <div className="flex flex-col mt-1 space-y-1">
                  <button
                     onClick={() => handleZoom(0.8)}
-                    className="bg-secondary hover:bg-muted text-muted-foreground p-1 rounded-l-md border border-border"
+                    className="bg-gray-700 hover:bg-gray-600 text-gray-300 p-1 rounded-l-md"
                     title="Zoom In"
                 >
                     <ZoomInIcon />
                 </button>
                  <button
                     onClick={() => handleZoom(1.2)}
-                    className="bg-secondary hover:bg-muted text-muted-foreground p-1 rounded-l-md border border-border"
+                    className="bg-gray-700 hover:bg-gray-600 text-gray-300 p-1 rounded-l-md"
                     title="Zoom Out"
                 >
                     <ZoomOutIcon />
@@ -307,38 +293,38 @@ const PayoffChart: React.FC<PayoffChartProps> = ({ legs, marketData, multiplier 
             </div>
         </div>
         <ResponsiveContainer width="100%" height="100%">
-        <LineChart
-            data={chartData}
+        <LineChart 
+            data={chartData} 
             margin={{ top: 5, right: 20, left: -10, bottom: 5 }}
         >
-            <CartesianGrid strokeDasharray="3 3" stroke={colors.grid} />
-            <XAxis
-                dataKey="spot"
-                type="number"
+            <CartesianGrid strokeDasharray="3 3" stroke="#444444" />
+            <XAxis 
+                dataKey="spot" 
+                type="number" 
                 domain={xDomain}
                 allowDataOverflow
-                tickFormatter={(value) => `\u20AC${Math.round(value)}`}
-                stroke={colors.axis}
+                tickFormatter={(value) => `€${Math.round(value)}`}
+                stroke="#a0a0a0"
                 fontSize={12}
             />
-            <YAxis
+            <YAxis 
                 domain={['auto', 'auto']}
                 allowDataOverflow
-                tickFormatter={(value) => `\u20AC${value}`}
-                stroke={colors.axis}
+                tickFormatter={(value) => `€${value}`}
+                stroke="#a0a0a0"
                 fontSize={12}
                 width={70}
             />
             <Tooltip content={<CustomTooltip />} />
             <Legend verticalAlign="top" height={36} iconSize={10}/>
-            <ReferenceLine y={0} stroke={colors.zeroLine} strokeDasharray="2 2" />
+            <ReferenceLine y={0} stroke="#6b7280" strokeDasharray="2 2" />
             <ReferenceLine x={marketData.daxSpot} stroke="#f59e0b" strokeDasharray="4 4" />
             {spotMarkerData.expiry.length > 0 && (
                 <ReferenceDot
                     x={spotMarkerData.expiry[0].x}
                     y={spotMarkerData.expiry[0].y}
                     isFront={true}
-                    shape={(props) => <Diamond {...props} fill="#3b82f6" stroke={isDark ? '#ffffff' : '#1f2937'} strokeWidth={1} />}
+                    shape={(props) => <Diamond {...props} fill="#3b82f6" stroke="#ffffff" strokeWidth={1} />}
                 />
             )}
             {spotMarkerData.today.length > 0 && (
@@ -346,11 +332,11 @@ const PayoffChart: React.FC<PayoffChartProps> = ({ legs, marketData, multiplier 
                     x={spotMarkerData.today[0].x}
                     y={spotMarkerData.today[0].y}
                     isFront={true}
-                    shape={(props) => <Diamond {...props} fill="#10b981" stroke={isDark ? '#ffffff' : '#1f2937'} strokeWidth={1} />}
+                    shape={(props) => <Diamond {...props} fill="#10b981" stroke="#ffffff" strokeWidth={1} />}
                 />
             )}
-            <Line type="monotone" dataKey="pnlAtExpiry" name="P&amp;L a Scadenza" stroke="#3b82f6" strokeWidth={2} dot={false} />
-            <Line type="monotone" dataKey="pnlToday" name="P&amp;L Oggi (T+N)" stroke="#10b981" strokeWidth={2} dot={false} strokeDasharray="5 5" />
+            <Line type="monotone" dataKey="pnlAtExpiry" name="P&L a Scadenza" stroke="#3b82f6" strokeWidth={2} dot={false} />
+            <Line type="monotone" dataKey="pnlToday" name="P&L Oggi (T+N)" stroke="#10b981" strokeWidth={2} dot={false} strokeDasharray="5 5" />
         </LineChart>
         </ResponsiveContainer>
     </div>

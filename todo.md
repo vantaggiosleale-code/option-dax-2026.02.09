@@ -552,3 +552,43 @@
   * Footer bulk edit (riga 464)
 - [x] Light mode verificato ancora funzionante dopo modifiche
 - [ ] Dark mode da testare: utente deve cliccare toggle per verificare tutto nero
+
+## 🔧 Fix Claude Code - Bug Critici e Miglioramenti (COMPLETATO)
+- [x] Scaricati 10 file fix da GitHub (andreavaturi-bit/OptionDAX)
+- [x] Creati file NUOVI:
+  * shared/blackScholes.ts - Modulo Black-Scholes unificato (393 righe)
+  * shared/optionTypes.ts - Schema Zod per validazione OptionLeg (115 righe)
+  * server/_core/rateLimiter.ts - Rate limiter per API esterne (135 righe)
+- [x] Aggiornati router backend:
+  * server/routers/analysis.ts - Usa modulo BS unificato (107 righe)
+  * server/routers/marketData.ts - Rate limiting + caching 30s (96 righe)
+  * server/routers/optionStructures.ts - Validazione Zod corretta (699 righe)
+- [x] Aggiornati componenti frontend:
+  * client/src/components/SettingsView.tsx - Colori tema-aware (120 righe)
+  * client/src/components/GreeksCalculator.tsx - Fix bg-[#0a0a0f] illeggibile (49 righe)
+  * client/src/components/PayoffSimulator.tsx - Fix bg-[#0a0a0f] illeggibile (49 righe)
+  * client/src/components/PayoffChart.tsx - Colori chart dinamici useTheme() (360 righe)
+- [x] Creati backup file originali con estensione .backup
+- [x] Riavviato dev server con successo
+- [x] Verificato app funzionante (screenshot light mode OK)
+- [ ] Testare dark mode con tutti i fix applicati
+- [ ] Salvare checkpoint finale per deployment
+
+### Fix Applicati (Riepilogo)
+**Backend:**
+- ✅ Unificato Black-Scholes (eliminata duplicazione codice)
+- ✅ Protezione divisione per zero
+- ✅ Rimosso logging dati sensibili
+- ✅ Aggiunto rate limiting (10 req/min API esterne)
+- ✅ Sostituito z.any() con validazione Zod corretta
+
+**Calcoli Finanziari:**
+- ✅ Implied Volatility con upper bound e fallback bisection
+- ✅ Break-even con interpolazione lineare (più preciso)
+- ✅ Consistenza anno 365.25 giorni
+
+**Frontend:**
+- ✅ SettingsView.tsx - colori tema-aware
+- ✅ GreeksCalculator.tsx - fix bg illeggibile
+- ✅ PayoffSimulator.tsx - fix bg illeggibile
+- ✅ PayoffChart.tsx - colori chart dinamici

@@ -1,11 +1,103 @@
 import { z } from "zod";
 import { protectedProcedure, router } from "../_core/trpc";
 import * as db from "../db";
-import {
-  calculateBlackScholes,
-  calculateBreakEvenPoints,
-  type PayoffPoint,
-} from "../../shared/blackScholes";
+
+/**
+ * Black-Scholes calculation helper
+ * Formula for European options pricing
+ */
+function calculateBlackScholes(params: {
+  spotPrice: number;
+  strikePrice: number;
+  timeToExpiry: number; // in years
+  riskFreeRate: number; // as decimal (e.g., 0.05 for 5%)
+  volatility: number; // as decimal (e.g., 0.20 for 20%)
+  optionType: "call" | "put";
+}) {
+  const { spotPrice, strikePrice, timeToExpiry, riskFreeRate, volatility, optionType } = params;
+
+  // Standard normal cumulative distribution function
+  const normalCDF = (x: number): number => {
+    const t = 1 / (1 + 0.2316419 * Math.abs(x));
+    const d = 0.3989423 * Math.exp((-x * x) / 2);
+    const prob =
+      d *
+      t *
+      (0.3193815 +
+        t * (-0.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274))));
+    return x > 0 ? 1 - prob : prob;
+  };
+
+  const d1 =
+    (Math.log(spotPrice / strikePrice) +
+      (riskFreeRate + (volatility * volatility) / 2) * timeToExpiry) /
+    (volatility * Math.sqrt(timeToExpiry));
+
+  const d2 = d1 - volatility * Math.sqrt(timeToExpiry);
+
+  let optionPrice: number;
+  let delta: number;
+  let gamma: number;
+  let vega: number;
+  let theta: number;
+  let rho: number;
+
+  if (optionType === "call") {
+    optionPrice =
+      spotPrice * normalCDF(d1) -
+      strikePrice * Math.exp(-riskFreeRate * timeToExpiry) * normalCDF(d2);
+    delta = normalCDF(d1);
+    rho =
+      strikePrice *
+      timeToExpiry *
+      Math.exp(-riskFreeRate * timeToExpiry) *
+      normalCDF(d2) /
+      100;
+  } else {
+    optionPrice =
+      strikePrice * Math.exp(-riskFreeRate * timeToExpiry) * normalCDF(-d2) -
+      spotPrice * normalCDF(-d1);
+    delta = normalCDF(d1) - 1;
+    rho =
+      -strikePrice *
+      timeToExpiry *
+      Math.exp(-riskFreeRate * timeToExpiry) *
+      normalCDF(-d2) /
+      100;
+  }
+
+  // Greeks (same for call and put)
+  gamma =
+    (Math.exp(-(d1 * d1) / 2) / Math.sqrt(2 * Math.PI)) /
+    (spotPrice * volatility * Math.sqrt(timeToExpiry));
+
+  vega =
+    (spotPrice *
+      Math.sqrt(timeToExpiry) *
+      Math.exp(-(d1 * d1) / 2)) /
+    Math.sqrt(2 * Math.PI) /
+    100;
+
+  theta =
+    ((-spotPrice *
+      Math.exp(-(d1 * d1) / 2) *
+      volatility) /
+      (2 * Math.sqrt(2 * Math.PI * timeToExpiry)) -
+      riskFreeRate *
+        strikePrice *
+        Math.exp(-riskFreeRate * timeToExpiry) *
+        (optionType === "call" ? normalCDF(d2) : normalCDF(-d2))) /
+    365;
+
+  return {
+    optionPrice: Math.round(optionPrice * 100) / 100,
+    delta: Math.round(delta * 10000) / 10000,
+    gamma: Math.round(gamma * 10000) / 10000,
+    vega: Math.round(vega * 100) / 100,
+    theta: Math.round(theta * 100) / 100,
+    rho: Math.round(rho * 100) / 100,
+  };
+}
 
 export const analysisRouter = router({
   calculateBlackScholes: protectedProcedure
@@ -83,8 +175,15 @@ export const analysisRouter = router({
         payoffData,
         maxProfit: Math.max(...payoffData.map((d) => d.payoff)),
         maxLoss: Math.min(...payoffData.map((d) => d.payoff)),
-        // Use linear interpolation for accurate break-even calculation
-        breakEvenPoints: calculateBreakEvenPoints(payoffData as PayoffPoint[]),
+        breakEvenPoints: payoffData
+          .filter((d, i, arr) => {
+            if (i === 0) return false;
+            return (
+              (d.payoff >= 0 && arr[i - 1].payoff < 0) ||
+              (d.payoff <= 0 && arr[i - 1].payoff > 0)
+            );
+          })
+          .map((d) => d.spotPrice),
       };
 
       // Save to analysis history

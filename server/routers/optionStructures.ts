@@ -3,6 +3,18 @@ import { eq, and, or, inArray, sql } from 'drizzle-orm';
 import { protectedProcedure, router } from '../_core/trpc';
 import { getDb } from '../db';
 import { structures, users, InsertStructure } from '../../drizzle/schema';
+import {
+  calculateBlackScholes,
+  percentToDecimal,
+  getTimeToExpiry,
+  MIN_TIME_TO_EXPIRY,
+} from '../../shared/blackScholes';
+import {
+  optionLegSchema,
+  optionLegsArraySchema,
+  DEFAULT_COMMISSION,
+  type OptionLeg,
+} from '../../shared/optionTypes';
 
 /**
  * Router per gestione strutture Option DAX
@@ -105,10 +117,10 @@ export const optionStructuresRouter = router({
   create: protectedProcedure
     .input(
       z.object({
-        tag: z.string(),
-        multiplier: z.number().default(5),
-        legsPerContract: z.number().default(2),
-        legs: z.array(z.any()), // OptionLeg[]
+        tag: z.string().min(1).max(100),
+        multiplier: z.number().int().positive().default(5),
+        legsPerContract: z.number().int().positive().default(2),
+        legs: optionLegsArraySchema, // Properly validated OptionLeg[]
         status: z.enum(['active', 'closed']).default('active'),
         openPnl: z.string().optional(),
         pdc: z.string().optional(),
@@ -118,14 +130,13 @@ export const optionStructuresRouter = router({
         vega: z.string().optional(),
         closingDate: z.string().optional(),
         realizedPnl: z.string().optional(),
-        isPublic: z.number().default(0).optional(),
-        isTemplate: z.number().default(0).optional(),
-        originalStructureId: z.number().optional(),
+        isPublic: z.number().int().min(0).max(1).default(0).optional(),
+        isTemplate: z.number().int().min(0).max(1).default(0).optional(),
+        originalStructureId: z.number().int().positive().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      console.log("[optionStructures.create] START - User:", ctx.user.id, "Tag:", input.tag);
-      console.log("[optionStructures.create] Input:", JSON.stringify(input, null, 2));
+      // NOTE: Sensitive data logging removed for security
       const db = await getDb();
       if (!db) throw new Error('Database not available');
 
@@ -151,7 +162,6 @@ export const optionStructuresRouter = router({
       };
 
       const [result] = await db.insert(structures).values(newStructure);
-      console.log("[optionStructures.create] Insert completed, insertId:", result.insertId);
       
       // Recupera la struttura appena creata dal database
       const [createdStructure] = await db
@@ -162,8 +172,6 @@ export const optionStructuresRouter = router({
       if (!createdStructure) {
         throw new Error('Failed to retrieve created structure');
       }
-      
-      console.log("[optionStructures.create] Returning created structure:", createdStructure.id);
       
       // Restituisci la struttura completa come fa list()
       return {
@@ -192,11 +200,11 @@ export const optionStructuresRouter = router({
   update: protectedProcedure
     .input(
       z.object({
-        id: z.number(),
-        tag: z.string().optional(),
-        multiplier: z.number().optional(),
-        legsPerContract: z.number().optional(),
-        legs: z.array(z.any()).optional(),
+        id: z.number().int().positive(),
+        tag: z.string().min(1).max(100).optional(),
+        multiplier: z.number().int().positive().optional(),
+        legsPerContract: z.number().int().positive().optional(),
+        legs: optionLegsArraySchema.optional(), // Properly validated OptionLeg[]
         status: z.enum(['active', 'closed']).optional(),
         openPnl: z.string().optional(),
         pdc: z.string().optional(),
@@ -409,66 +417,36 @@ export const optionStructuresRouter = router({
       }
 
       // Parse legs
-      const legs = JSON.parse(structure.legs);
-
-      // Black-Scholes helper functions
-      const erf = (x: number): number => {
-        const a1 =  0.254829592;
-        const a2 = -0.284496736;
-        const a3 =  1.421413741;
-        const a4 = -1.453152027;
-        const a5 =  1.061405429;
-        const p  =  0.3275911;
-        const sign = x >= 0 ? 1 : -1;
-        const absX = Math.abs(x);
-        const t = 1.0 / (1.0 + p * absX);
-        const y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-absX * absX);
-        return sign * y;
-      };
-
-      const normCdf = (x: number): number => {
-        return 0.5 * (1.0 + erf(x / Math.sqrt(2.0)));
-      };
+      const legs = JSON.parse(structure.legs) as OptionLeg[];
 
       const closingDate = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
       let realizedPnl = 0;
 
-      const updatedLegs = legs.map((leg: any) => {
-        // Calculate time to expiry in years
-        const expiryTime = new Date(leg.expiryDate).getTime();
-        const nowTime = Date.now();
-        const timeToExpiry = Math.max((expiryTime - nowTime) / (365.25 * 24 * 60 * 60 * 1000), 0.000001);
-        
-        // Convert percentages to decimals (CRITICAL FIX!)
-        const r = input.riskFreeRate / 100;
-        const sigma = leg.impliedVolatility / 100;
-        const S = input.daxSpot;
-        const K = leg.strike;
-        
-        // Black-Scholes d1 and d2
-        const d1 = (Math.log(S / K) + (r + 0.5 * sigma * sigma) * timeToExpiry) / (sigma * Math.sqrt(timeToExpiry));
-        const d2 = d1 - sigma * Math.sqrt(timeToExpiry);
-        
-        // Calculate theoretical price
-        let theoreticalPrice: number;
-        // Normalize optionType to handle both 'Call'/'Put' and 'call'/'put'
-        const optionTypeLower = (leg.optionType || '').toLowerCase();
-        
-        if (optionTypeLower === 'call') {
-          theoreticalPrice = S * normCdf(d1) - K * Math.exp(-r * timeToExpiry) * normCdf(d2);
-        } else {
-          theoreticalPrice = K * Math.exp(-r * timeToExpiry) * normCdf(-d2) - S * normCdf(-d1);
-        }
+      const updatedLegs = legs.map((leg) => {
+        // Calculate time to expiry using the unified utility
+        const timeToExpiry = Math.max(getTimeToExpiry(leg.expiryDate), MIN_TIME_TO_EXPIRY);
 
-        // Ensure non-negative price
-        theoreticalPrice = Math.max(0, theoreticalPrice);
+        // Normalize optionType to handle both 'Call'/'Put' and 'call'/'put'
+        const optionTypeLower = (leg.optionType || '').toLowerCase() as 'call' | 'put';
+
+        // Use the unified Black-Scholes calculation
+        const bsResult = calculateBlackScholes({
+          spotPrice: input.daxSpot,
+          strikePrice: leg.strike,
+          timeToExpiry,
+          riskFreeRate: percentToDecimal(input.riskFreeRate),
+          volatility: percentToDecimal(leg.impliedVolatility),
+          optionType: optionTypeLower,
+        });
+
+        const theoreticalPrice = bsResult.optionPrice;
 
         // Use manual closingPrice if already set, otherwise use theoretical
-        const finalClosingPrice = leg.closingPrice !== null && leg.closingPrice !== undefined 
-          ? leg.closingPrice 
+        const finalClosingPrice = leg.closingPrice !== null && leg.closingPrice !== undefined
+          ? leg.closingPrice
           : theoreticalPrice;
 
-        // Calculate P&L for this leg (CORRECTED FORMULA!)
+        // Calculate P&L for this leg
         // P&L in points: for long positions (quantity > 0): currentPrice - tradePrice
         //                for short positions (quantity < 0): tradePrice - currentPrice
         // Then multiply by quantity (which includes sign) and multiplier
@@ -480,12 +458,12 @@ export const optionStructuresRouter = router({
           // Short position: profit when price goes down
           pnlPoints = (leg.tradePrice - finalClosingPrice) * Math.abs(leg.quantity);
         }
-        
+
         const grossPnl = pnlPoints * structure.multiplier;
-        const openingCommission = (leg.openingCommission || 2) * Math.abs(leg.quantity);
-        const closingCommission = (leg.closingCommission || 2) * Math.abs(leg.quantity);
+        const openingCommission = (leg.openingCommission ?? DEFAULT_COMMISSION) * Math.abs(leg.quantity);
+        const closingCommission = (leg.closingCommission ?? DEFAULT_COMMISSION) * Math.abs(leg.quantity);
         const netPnl = grossPnl - openingCommission - closingCommission;
-        
+
         realizedPnl += netPnl;
 
         return {
