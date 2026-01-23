@@ -592,3 +592,24 @@
 - ✅ GreeksCalculator.tsx - fix bg illeggibile
 - ✅ PayoffSimulator.tsx - fix bg illeggibile
 - ✅ PayoffChart.tsx - colori chart dinamici
+
+## 🔤 Fix Leggibilità Caratteri Light/Dark Mode (COMPLETATO)
+- [x] Scaricati nuovi fix da GitHub branch claude/check-repo-access-XA8Sn
+- [x] Applicati fix a 3 componenti frontend:
+  * SettingsView.tsx (120 → 145 righe) - Classi Tailwind esplicite
+  * GreeksCalculator.tsx - Fix leggibilità testi
+  * PayoffSimulator.tsx - Fix leggibilità testi
+- [x] HMR applicato con successo (server running)
+- [ ] Testare leggibilità in light mode manualmente
+- [ ] Testare leggibilità in dark mode manualmente
+- [ ] Salvare checkpoint finale
+
+### Dettaglio Fix Applicati (da tabella Claude)
+**Elemento → Light Mode → Dark Mode:**
+- Card background: bg-white → dark:bg-gray-900
+- Input background: bg-white → dark:bg-gray-800
+- Feature box: bg-gray-100 → dark:bg-gray-800
+- Text principale: text-gray-900 → dark:text-white
+- Text secondario: text-gray-600 → dark:text-gray-300
+- Labels: text-gray-700 → dark:text-gray-300
+- Borders: border-gray-200 → dark:border-gray-700
