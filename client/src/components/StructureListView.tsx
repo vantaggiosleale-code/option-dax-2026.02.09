@@ -98,7 +98,7 @@ const StructureListView: React.FC<StructureListViewProps> = ({ setCurrentView })
     const { theme } = useTheme();
     
     // Colori testo basati su tema
-    const textPrimary = theme === 'light' ? '#374151' : '#f9fafb';
+    const textPrimary = theme === 'light' ? '#374151' : '#6b7280';
     const textSecondary = theme === 'light' ? '#6b7280' : '#6b7280';
     const textMuted = theme === 'light' ? '#9ca3af' : '#9ca3af';
     const bgCard = theme === 'light' ? '#ffffff' : '#111827';
