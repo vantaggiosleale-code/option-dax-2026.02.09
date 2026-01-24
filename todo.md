@@ -795,3 +795,8 @@
 - [x] Rimosso simbolo € da colonne Theta e Vega
 - [x] Rimosso moltiplicatore da calcolo (punti invece di euro)
 - [x] Mantenuto formato due righe in StructureListView (Dashboard) - NON MODIFICATO
+
+## Fix UX Importazione Strutture Pubbliche
+- [x] Eliminare pagina intermedia "Caricamento struttura..." dopo click "Importa nel mio account"
+- [x] Reindirizzare direttamente alla Dashboard dopo importazione completata
+- [x] Testare flusso: click Importa → vedi subito struttura copiata in Dashboard

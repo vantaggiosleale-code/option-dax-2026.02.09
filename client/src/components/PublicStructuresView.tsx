@@ -25,8 +25,8 @@ const PublicStructuresView: React.FC<PublicStructuresViewProps> = ({ setCurrentV
       toast.success('Struttura importata', {
         description: `La struttura "${data.tag}" è stata copiata nel tuo account.`,
       });
-      // Redirect to detail view of imported structure
-      setCurrentView('detail', data.id);
+      // Redirect to dashboard to see imported structure
+      setCurrentView('dashboard');
     },
     onError: (error) => {
       toast.error('Errore importazione', {
