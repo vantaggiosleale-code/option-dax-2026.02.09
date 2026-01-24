@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import useSettingsStore from '../store/settingsStore';
 import { Settings } from '../types';
+import { trpc } from '../lib/trpc';
+import { toast } from 'sonner';
 
 interface SettingsViewProps {
     setCurrentView: (view: 'dashboard' | 'payoff' | 'greeks' | 'history' | 'settings' | 'detail' | 'analysis' | 'public' | 'test', structureId?: number | 'new' | null) => void;
@@ -10,6 +12,31 @@ const SettingsView: React.FC<SettingsViewProps> = ({ setCurrentView }) => {
     const { settings, updateSettings } = useSettingsStore();
     const [localSettings, setLocalSettings] = useState<Settings>(settings);
     const [isSaved, setIsSaved] = useState(false);
+    
+    // User settings from database (defaults for new structures)
+    const { data: userSettings, isLoading: isLoadingSettings } = trpc.userSettings.get.useQuery();
+    const updateUserSettingsMutation = trpc.userSettings.update.useMutation({
+        onSuccess: () => {
+            toast.success('Parametri default salvati!');
+        },
+        onError: (error) => {
+            toast.error('Errore nel salvataggio', { description: error.message });
+        }
+    });
+    
+    // Local state for user settings
+    const [defaultVolatility, setDefaultVolatility] = useState<string>('15');
+    const [defaultRiskFreeRate, setDefaultRiskFreeRate] = useState<string>('2');
+    const [defaultMultiplier, setDefaultMultiplier] = useState<number>(5);
+    
+    // Load user settings when available
+    useEffect(() => {
+        if (userSettings) {
+            setDefaultVolatility((parseFloat(userSettings.defaultVolatility) * 100).toFixed(2));
+            setDefaultRiskFreeRate((parseFloat(userSettings.defaultRiskFreeRate) * 100).toFixed(2));
+            setDefaultMultiplier(userSettings.defaultMultiplier);
+        }
+    }, [userSettings]);
 
     useEffect(() => {
         setLocalSettings(settings);
@@ -28,6 +55,14 @@ const SettingsView: React.FC<SettingsViewProps> = ({ setCurrentView }) => {
         updateSettings(localSettings);
         setIsSaved(true);
         setTimeout(() => setIsSaved(false), 2000);
+    };
+    
+    const handleSaveDefaults = () => {
+        updateUserSettingsMutation.mutate({
+            defaultVolatility: (parseFloat(defaultVolatility) / 100).toFixed(4),
+            defaultRiskFreeRate: (parseFloat(defaultRiskFreeRate) / 100).toFixed(4),
+            defaultMultiplier,
+        });
     };
 
     // Classi comuni per input e select
@@ -135,6 +170,81 @@ const SettingsView: React.FC<SettingsViewProps> = ({ setCurrentView }) => {
                         className="bg-sky-500 hover:bg-sky-600 text-white font-bold py-2 px-6 rounded-md transition-colors"
                     >
                         Salva Modifiche
+                    </button>
+                </div>
+            </div>
+            
+            {/* Nuova sezione: Parametri Default per Nuove Strutture */}
+            <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-6 shadow-sm">
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Parametri Default per Nuove Strutture</h2>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
+                    Questi valori verranno applicati automaticamente alle nuove strutture create. Le strutture esistenti non saranno modificate.
+                </p>
+                
+                <div className="space-y-5">
+                    <div>
+                        <label htmlFor="defaultVolatility" className={labelClasses}>
+                            Volatilità Implicita Default (%)
+                        </label>
+                        <input
+                            type="number"
+                            id="defaultVolatility"
+                            min="5"
+                            max="60"
+                            step="0.1"
+                            value={defaultVolatility}
+                            onChange={(e) => setDefaultVolatility(e.target.value)}
+                            className={inputClasses}
+                            disabled={isLoadingSettings}
+                        />
+                    </div>
+                    
+                    <div>
+                        <label htmlFor="defaultRiskFreeRate" className={labelClasses}>
+                            Tasso Risk-Free Default (%)
+                        </label>
+                        <input
+                            type="number"
+                            id="defaultRiskFreeRate"
+                            min="0"
+                            max="10"
+                            step="0.01"
+                            value={defaultRiskFreeRate}
+                            onChange={(e) => setDefaultRiskFreeRate(e.target.value)}
+                            className={inputClasses}
+                            disabled={isLoadingSettings}
+                        />
+                    </div>
+                    
+                    <div>
+                        <label htmlFor="defaultMultiplierNew" className={labelClasses}>
+                            Moltiplicatore Default
+                        </label>
+                        <select
+                            id="defaultMultiplierNew"
+                            value={defaultMultiplier}
+                            onChange={(e) => setDefaultMultiplier(parseInt(e.target.value))}
+                            className={inputClasses}
+                            disabled={isLoadingSettings}
+                        >
+                            <option value="5">Indice (5&euro;/punto)</option>
+                            <option value="1">CFD (1&euro;/punto)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div className="mt-6 flex items-center justify-end">
+                    {updateUserSettingsMutation.isSuccess && (
+                        <span className="text-sm text-green-600 dark:text-green-400 mr-4">
+                            Parametri salvati!
+                        </span>
+                    )}
+                    <button
+                        onClick={handleSaveDefaults}
+                        disabled={updateUserSettingsMutation.isPending || isLoadingSettings}
+                        className="bg-sky-500 hover:bg-sky-600 text-white font-bold py-2 px-6 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        {updateUserSettingsMutation.isPending ? 'Salvataggio...' : 'Salva Parametri Default'}
                     </button>
                 </div>
             </div>

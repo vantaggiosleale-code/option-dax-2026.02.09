@@ -64,6 +64,10 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
     
     // setCurrentView ora viene passata come prop da App.tsx
     const { settings } = useSettingsStore();
+    
+    // Fetch user settings for defaults
+    const { data: userSettings } = trpc.userSettings.get.useQuery();
+    
     const [localStructure, setLocalStructure] = useState<Omit<Structure, 'id' | 'status'> | Structure | null>(null);
     const [isReadOnly, setIsReadOnly] = useState(false);
     const [localInputValues, setLocalInputValues] = useState<Record<string, string>>({});
@@ -72,10 +76,15 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
 
     useEffect(() => {
         if (structureId === 'new') {
+            // Apply defaults from user settings
+            const defaultMultiplier = userSettings?.defaultMultiplier || 5;
+            const defaultRiskFreeRate = userSettings?.defaultRiskFreeRate || '0.02';
+            
             setLocalStructure({
                 tag: '',
                 legs: [],
-                multiplier: 5, // Default multiplier
+                multiplier: defaultMultiplier,
+                riskFreeRate: defaultRiskFreeRate,
             });
             setIsReadOnly(false);
         } else if (structureId) {
@@ -193,6 +202,11 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
         const defaultExpiryDate = findThirdFridayOfMonth(nextMonthDate.getFullYear(), nextMonthDate.getMonth());
         const defaultExpiryString = defaultExpiryDate.toISOString().split('T')[0];
 
+        // Apply default volatility from user settings
+        const defaultVolatility = userSettings?.defaultVolatility 
+            ? parseFloat(userSettings.defaultVolatility) * 100 
+            : 15;
+        
         const newLeg: OptionLeg = {
             id: newId,
             optionType: 'Call',
@@ -203,7 +217,7 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
             tradePrice: 100,
             closingPrice: null,
             closingDate: null,
-            impliedVolatility: 15,
+            impliedVolatility: defaultVolatility,
             openingCommission: settings.defaultOpeningCommission,
             closingCommission: settings.defaultClosingCommission,
         };
@@ -262,7 +276,8 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
     const handleClose = async () => {
         if (!localStructure || !('id' in localStructure) || isReadOnly) return;
         try {
-            await closeStructure(localStructure.id, marketData.daxSpot, marketData.riskFreeRate);
+            const riskFreeRate = localStructure.riskFreeRate ? parseFloat(localStructure.riskFreeRate) : 0.02;
+            await closeStructure(localStructure.id, marketData.daxSpot, riskFreeRate);
             setCurrentView('dashboard');
         } catch (error) {
             console.error('Errore durante la chiusura:', error);
@@ -297,9 +312,10 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
 
         const openLegs = localStructure.legs.filter(leg => leg.closingPrice === null || leg.closingPrice === undefined);
 
+        const riskFreeRate = localStructure.riskFreeRate ? parseFloat(localStructure.riskFreeRate) : 0.02;
         const legGreeks = openLegs.map(leg => {
             const timeToExpiry = getTimeToExpiry(leg.expiryDate);
-            const bs = new BlackScholes(marketData.daxSpot, leg.strike, timeToExpiry, marketData.riskFreeRate, leg.impliedVolatility);
+            const bs = new BlackScholes(marketData.daxSpot, leg.strike, timeToExpiry, riskFreeRate, leg.impliedVolatility);
             const greeks = leg.optionType === 'Call' ? bs.callGreeks() : bs.putGreeks();
             
             // FIX: Greeks are calculated purely in points here. Monetization is handled in the render.
@@ -350,7 +366,8 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
                 const timeToExpiry = getTimeToExpiry(leg.expiryDate);
                 let currentPrice = 0;
                 if (timeToExpiry > 0) {
-                     const bs = new BlackScholes(marketData.daxSpot, leg.strike, timeToExpiry, marketData.riskFreeRate, leg.impliedVolatility);
+                     const riskFreeRate = localStructure.riskFreeRate ? parseFloat(localStructure.riskFreeRate) : 0.02;
+                     const bs = new BlackScholes(marketData.daxSpot, leg.strike, timeToExpiry, riskFreeRate, leg.impliedVolatility);
                      currentPrice = leg.optionType === 'Call' ? bs.callPrice() : bs.putPrice();
                 } else { // If expired, value is intrinsic value.
                      currentPrice = leg.optionType === 'Call' ? Math.max(0, marketData.daxSpot - leg.strike) : Math.max(0, leg.strike - marketData.daxSpot);
@@ -421,7 +438,8 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
                 ? Math.max(0, marketData.daxSpot - leg.strike) 
                 : Math.max(0, leg.strike - marketData.daxSpot);
         }
-        const bs = new BlackScholes(marketData.daxSpot, leg.strike, timeToExpiry, marketData.riskFreeRate, leg.impliedVolatility);
+        const riskFreeRate = localStructure.riskFreeRate ? parseFloat(localStructure.riskFreeRate) : 0.02;
+        const bs = new BlackScholes(marketData.daxSpot, leg.strike, timeToExpiry, riskFreeRate, leg.impliedVolatility);
         return leg.optionType === 'Call' ? bs.callPrice() : bs.putPrice();
     };
 
@@ -500,6 +518,26 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
                                 <option value="1">CFD (1€/punto)</option>
                             </select>
                         </div>
+                    </div>
+                    
+                    <div>
+                        <label htmlFor="structure-risk-free" className="text-sm font-medium text-gray-400">Tasso Risk-Free (%)</label>
+                        <input
+                            id="structure-risk-free"
+                            type="number"
+                            min="0"
+                            max="10"
+                            step="0.01"
+                            value={localStructure.riskFreeRate ? (parseFloat(localStructure.riskFreeRate) * 100).toFixed(2) : '2.00'}
+                            onChange={(e) => {
+                                const percentValue = parseFloat(e.target.value);
+                                const decimalValue = (percentValue / 100).toFixed(4);
+                                updateStructureField('riskFreeRate', decimalValue);
+                            }}
+                            className={`mt-1 bg-gray-700 border border-gray-600 rounded-md px-3 py-2 w-full text-white focus:ring-2 focus:ring-accent focus:border-accent outline-none ${disabledClass}`}
+                            disabled={isReadOnly}
+                            title="Tasso privo di rischio usato nei calcoli Black-Scholes (influisce su Rho)"
+                        />
                     </div>
                     
                     {/* Admin Toggle Public/Private */}

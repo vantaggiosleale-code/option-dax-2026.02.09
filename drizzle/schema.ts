@@ -142,6 +142,7 @@ export const structures = mysqlTable("structures", {
   tag: varchar("tag", { length: 100 }).notNull(), // e.g., "BPS5", "STG7"
   multiplier: int("multiplier").notNull().default(5), // Product multiplier (1=CFD, 5=Micro Future, 25=Future)
   legsPerContract: int("legsPerContract").notNull().default(2), // 2 gambe/e
+  riskFreeRate: varchar("riskFreeRate", { length: 20 }).notNull().default("0.02"), // Risk-free rate for Black-Scholes (e.g., "0.02" = 2%)
   legs: text("legs").notNull(), // JSON string of OptionLeg[]
   status: mysqlEnum("status", ["active", "closed"]).default("active").notNull(),
   
@@ -186,3 +187,19 @@ export const structureGraphics = mysqlTable("structure_graphics", {
 
 export type StructureGraphic = typeof structureGraphics.$inferSelect;
 export type InsertStructureGraphic = typeof structureGraphics.$inferInsert;
+
+/**
+ * User settings table - stores default parameters for new structures
+ */
+export const userSettings = mysqlTable("user_settings", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }).unique(),
+  defaultVolatility: varchar("defaultVolatility", { length: 20 }).notNull().default("0.15"), // Default implied volatility (e.g., "0.15" = 15%)
+  defaultRiskFreeRate: varchar("defaultRiskFreeRate", { length: 20 }).notNull().default("0.02"), // Default risk-free rate (e.g., "0.02" = 2%)
+  defaultMultiplier: int("defaultMultiplier").notNull().default(5), // Default multiplier for new structures
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type UserSettings = typeof userSettings.$inferSelect;
+export type InsertUserSettings = typeof userSettings.$inferInsert;

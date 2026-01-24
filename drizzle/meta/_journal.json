@@ -43,6 +43,13 @@
       "when": 1769008441004,
       "tag": "0005_past_firelord",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1769255073662,
+      "tag": "0006_fair_wraith",
+      "breakpoints": true
     }
   ]
 }

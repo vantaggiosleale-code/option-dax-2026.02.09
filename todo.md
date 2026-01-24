@@ -687,3 +687,22 @@
 - [x] Grafico ha sempre sfondo nero indipendentemente dal tema light/dark
 - [x] HMR applicato con successo
 - [ ] Test manuale: aprire struttura, verificare pulsanti zoom bianchi leggibili
+
+## Implementazione Tasso Risk-Free per Struttura (COMPLETATO)
+- [x] Aggiunto campo riskFreeRate alla tabella structures nel database (varchar default "0.02")
+- [x] Router optionStructures già supporta riskFreeRate tramite schema
+- [x] Aggiunto input "Tasso Risk-Free (%)" in StructureDetailView (dopo Moltiplicatore)
+- [x] Sostituito marketData.riskFreeRate con localStructure.riskFreeRate in tutti i calcoli Black-Scholes
+- [x] Modifiche al risk-free ora influenzano correttamente la greca Rho
+- [ ] Test manuale: modificare risk-free in una struttura e verificare cambio Rho
+
+## Parametri Default Configurabili in Impostazioni (COMPLETATO)
+- [x] Creata tabella user_settings nel database (userId, defaultVolatility, defaultRiskFreeRate, defaultMultiplier)
+- [x] Creato router tRPC userSettings con procedure get/update
+- [x] Aggiunta sezione "Parametri Default per Nuove Strutture" in SettingsView
+- [x] 3 input: Volatilità Implicita Default (%), Tasso Risk-Free Default (%), Moltiplicatore Default
+- [x] Settings salvati nel database con pulsante "Salva Parametri Default"
+- [x] Defaults applicati SOLO alla creazione di nuove strutture (useEffect in StructureDetailView)
+- [x] Defaults applicati anche alle nuove gambe (addLeg usa defaultVolatility)
+- [x] Test vitest passati (4/4) - userSettings.test.ts
+- [ ] Test manuale: modificare defaults in Impostazioni, creare nuova struttura, verificare valori applicati
