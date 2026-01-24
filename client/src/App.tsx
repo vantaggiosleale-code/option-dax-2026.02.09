@@ -115,7 +115,7 @@ const App: React.FC = () => {
                         {!loading && (
                             isAuthenticated ? (
                                 <div className="flex items-center space-x-3">
-                                    <span className="text-sm text-gray-900 dark:text-white font-medium">{user?.name || user?.email}</span>
+                                    <span className="text-sm font-medium" style={{ color: theme === 'light' ? '#111827' : '#ffffff' }}>{user?.name || user?.email}</span>
                                     <button
                                         onClick={handleLogout}
                                         className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition"

@@ -640,3 +640,11 @@
 - [x] HMR applicato con successo
 - [ ] Testare dark mode manualmente (aprire struttura e verificare testi bianchi)
 - [ ] Salvare checkpoint
+
+## 🎨 Fix Nome Utente Header Light Mode (COMPLETATO)
+- [x] Identificato elemento nome utente in App.tsx header (riga 118)
+- [x] Problema: usava classi Tailwind dark:text-white che non funzionano senza classe .dark nel DOM
+- [x] Soluzione: sostituito con inline styles `style={{ color: theme === 'light' ? '#111827' : '#ffffff' }}`
+- [x] Light mode testato: nome NERO leggibile ✅
+- [ ] Dark mode da testare: cliccare toggle per verificare nome bianco
+- [ ] Salvare checkpoint
