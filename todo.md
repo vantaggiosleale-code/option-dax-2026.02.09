@@ -663,3 +663,19 @@
 - [x] HMR applicato con successo
 - [ ] Testare light mode: cliccare "Storico" sidebar e verificare titolo nero scuro con icona
 - [ ] Salvare checkpoint
+
+## 🚨 FIX URGENTE: Titolo Dashboard di Performance Inline Styles
+- [ ] Problema: classi Tailwind dark:text-white NON funzionano (no classe .dark nel DOM)
+- [ ] Soluzione: sostituire con inline styles style={{ color: theme === 'light' ? '#111827' : '#ffffff' }}
+- [ ] Importare useTheme() in PortfolioAnalysis.tsx
+- [ ] Applicare inline styles al titolo h1
+- [ ] Testare light mode (nero) e dark mode (bianco)
+- [ ] Salvare checkpoint
+
+## Fix Titolo Dashboard di Performance Invisibile (COMPLETATO)
+- [x] Identificato problema: text-gray-900 dark:text-white non funziona (dark: modifier non supportato)
+- [x] Sostituito classi Tailwind con inline styles in PortfolioAnalysis.tsx riga 154
+- [x] Titolo ora usa: style={{ color: theme === 'light' ? '#111827' : '#ffffff' }}
+- [x] HMR applicato con successo (3 volte)
+- [x] Fix coerente con altri componenti (Sidebar, App.tsx, StructureListView)
+- [ ] Test manuale: cliccare "Storico" in sidebar e verificare titolo nero in light mode, bianco in dark mode

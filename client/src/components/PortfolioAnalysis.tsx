@@ -5,6 +5,7 @@ import {
 } from 'recharts';
 import { trpc } from '../lib/trpc';
 import { TrendingUp, TrendingDown, Scale, CheckCircle, PlusCircle, MinusCircle } from 'lucide-react';
+import { useTheme } from '../contexts/ThemeContext';
 
 // Custom Tooltip for Equity Chart
 const CustomEquityTooltip = ({ active, payload }: any) => {
@@ -47,6 +48,7 @@ const MetricCard = ({ icon, title, value, colorClass = 'text-foreground' }: { ic
 );
 
 const PortfolioAnalysis: React.FC = () => {
+    const { theme } = useTheme();
     const { data: closedStructures, isLoading } = trpc.optionStructures.list.useQuery({
         status: 'closed',
     });
@@ -149,7 +151,7 @@ const PortfolioAnalysis: React.FC = () => {
     return (
         <div className="max-w-7xl mx-auto">
             <div className="flex justify-between items-center mb-6">
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                <h1 className="text-3xl font-bold flex items-center gap-2" style={{ color: theme === 'light' ? '#111827' : '#ffffff' }}>
                     <TrendingUp className="w-8 h-8" />
                     Dashboard di Performance
                 </h1>
