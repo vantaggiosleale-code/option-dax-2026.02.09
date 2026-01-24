@@ -284,7 +284,12 @@ const PayoffChart: React.FC<PayoffChartProps> = ({ legs, marketData, multiplier 
         <div className="absolute top-0 right-0 z-10 flex flex-col items-end pointer-events-auto">
             <button
                 onClick={() => setXDomain(initialXDomain)}
-                className="bg-secondary hover:bg-muted text-muted-foreground px-2 py-1 text-xs rounded-bl-md border border-border"
+                className="px-2 py-1 text-xs rounded-bl-md border"
+                style={{
+                    backgroundColor: '#374151',
+                    color: '#ffffff',
+                    borderColor: '#4b5563',
+                }}
                 title="Reset Zoom"
             >
                 <ResetIcon />
@@ -292,14 +297,24 @@ const PayoffChart: React.FC<PayoffChartProps> = ({ legs, marketData, multiplier 
             <div className="flex flex-col mt-1 space-y-1">
                  <button
                     onClick={() => handleZoom(0.8)}
-                    className="bg-secondary hover:bg-muted text-muted-foreground p-1 rounded-l-md border border-border"
+                    className="p-1 rounded-l-md border"
+                    style={{
+                        backgroundColor: '#374151',
+                        color: '#ffffff',
+                        borderColor: '#4b5563',
+                    }}
                     title="Zoom In"
                 >
                     <ZoomInIcon />
                 </button>
                  <button
                     onClick={() => handleZoom(1.2)}
-                    className="bg-secondary hover:bg-muted text-muted-foreground p-1 rounded-l-md border border-border"
+                    className="p-1 rounded-l-md border"
+                    style={{
+                        backgroundColor: '#374151',
+                        color: '#ffffff',
+                        borderColor: '#4b5563',
+                    }}
                     title="Zoom Out"
                 >
                     <ZoomOutIcon />

@@ -679,3 +679,11 @@
 - [x] HMR applicato con successo (3 volte)
 - [x] Fix coerente con altri componenti (Sidebar, App.tsx, StructureListView)
 - [ ] Test manuale: cliccare "Storico" in sidebar e verificare titolo nero in light mode, bianco in dark mode
+
+## Fix Pulsanti Zoom Grafico Payoff Illeggibili (COMPLETATO)
+- [x] Trovato componente PayoffChart.tsx (righe 285-321)
+- [x] Sostituito classi CSS semantiche con inline styles fissi
+- [x] Pulsanti sempre bianchi (#ffffff) su bg grigio scuro (#374151)
+- [x] Grafico ha sempre sfondo nero indipendentemente dal tema light/dark
+- [x] HMR applicato con successo
+- [ ] Test manuale: aprire struttura, verificare pulsanti zoom bianchi leggibili
