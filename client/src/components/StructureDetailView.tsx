@@ -601,8 +601,8 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
                                 </div>
                                 <div>
                                     <div className="grid grid-cols-2 gap-2">
-                                        <input type="text" placeholder="Prezzo Ap." value={tradePriceKey in localInputValues ? localInputValues[tradePriceKey] : (leg.tradePrice ?? '')} onChange={e => handleNumericInputChange(leg.id, 'tradePrice', e.target.value)} onBlur={() => handleNumericInputBlur(leg.id, 'tradePrice')} className={`bg-gray-600 rounded p-1 text-sm w-full ${disabledClass}`} title="Prezzo di Apertura" disabled={isReadOnly}/>
-                                        <input type="text" placeholder="Prezzo Ch." value={closingPriceKey in localInputValues ? localInputValues[closingPriceKey] : (leg.closingPrice ?? '')} onChange={e => handleNumericInputChange(leg.id, 'closingPrice', e.target.value)} onBlur={() => handleNumericInputBlur(leg.id, 'closingPrice')} className={`bg-gray-600 rounded p-1 text-sm w-full ${disabledClass}`} title="Prezzo di Chiusura (lasciare vuoto se aperta)" disabled={isReadOnly}/>
+                                        <input type="text" placeholder="Prezzo Ap." value={tradePriceKey in localInputValues ? localInputValues[tradePriceKey] : (leg.tradePrice ?? '')} onChange={e => handleNumericInputChange(leg.id, 'tradePrice', e.target.value)} onBlur={() => handleNumericInputBlur(leg.id, 'tradePrice')} className={`bg-gray-600 rounded p-1 text-sm w-full text-white ${disabledClass}`} title="Prezzo di Apertura" disabled={isReadOnly}/>
+                                        <input type="text" placeholder="Prezzo Ch." value={closingPriceKey in localInputValues ? localInputValues[closingPriceKey] : (leg.closingPrice ?? '')} onChange={e => handleNumericInputChange(leg.id, 'closingPrice', e.target.value)} onBlur={() => handleNumericInputBlur(leg.id, 'closingPrice')} className={`bg-gray-600 rounded p-1 text-sm w-full text-white ${disabledClass}`} title="Prezzo di Chiusura (lasciare vuoto se aperta)" disabled={isReadOnly}/>
                                     </div>
                                     <div className="text-xs text-gray-400 mt-1 flex items-center justify-between">
                                         <div>
@@ -634,7 +634,7 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
                                             value={ivKey in localInputValues ? localInputValues[ivKey] : (leg.impliedVolatility ?? '')}
                                             onChange={e => handleNumericInputChange(leg.id, 'impliedVolatility', e.target.value)}
                                             onBlur={() => handleNumericInputBlur(leg.id, 'impliedVolatility')}
-                                            className={`bg-gray-600 border-gray-500 rounded p-1 text-sm w-20 text-center ${disabledClass}`}
+                                            className={`bg-gray-600 border-gray-500 rounded p-1 text-sm w-20 text-center text-white ${disabledClass}`}
                                             disabled={isReadOnly}
                                         />
                                         <input
@@ -651,8 +651,8 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-2 gap-2">
-                                    <input type="text" placeholder="Comm. Ap." value={openCommKey in localInputValues ? localInputValues[openCommKey] : (leg.openingCommission ?? '')} onChange={e => handleNumericInputChange(leg.id, 'openingCommission', e.target.value)} onBlur={() => handleNumericInputBlur(leg.id, 'openingCommission')} className={`bg-gray-600 rounded p-1 text-sm w-full ${disabledClass}`} title="Commissione di Apertura (per contratto)" disabled={isReadOnly}/>
-                                    <input type="text" placeholder="Comm. Ch." value={closeCommKey in localInputValues ? localInputValues[closeCommKey] : (leg.closingCommission ?? '')} onChange={e => handleNumericInputChange(leg.id, 'closingCommission', e.target.value)} onBlur={() => handleNumericInputBlur(leg.id, 'closingCommission')} className={`bg-gray-600 rounded p-1 text-sm w-full ${disabledClass}`} title="Commissione di Chiusura (per contratto)" disabled={isReadOnly}/>
+                                    <input type="text" placeholder="Comm. Ap." value={openCommKey in localInputValues ? localInputValues[openCommKey] : (leg.openingCommission ?? '')} onChange={e => handleNumericInputChange(leg.id, 'openingCommission', e.target.value)} onBlur={() => handleNumericInputBlur(leg.id, 'openingCommission')} className={`bg-gray-600 rounded p-1 text-sm w-full text-white ${disabledClass}`} title="Commissione di Apertura (per contratto)" disabled={isReadOnly}/>
+                                    <input type="text" placeholder="Comm. Ch." value={closeCommKey in localInputValues ? localInputValues[closeCommKey] : (leg.closingCommission ?? '')} onChange={e => handleNumericInputChange(leg.id, 'closingCommission', e.target.value)} onBlur={() => handleNumericInputBlur(leg.id, 'closingCommission')} className={`bg-gray-600 rounded p-1 text-sm w-full text-white ${disabledClass}`} title="Commissione di Chiusura (per contratto)" disabled={isReadOnly}/>
                                 </div>
                             </div>
                             )

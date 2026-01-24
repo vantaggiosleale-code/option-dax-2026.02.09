@@ -624,3 +624,19 @@
 - [x] HMR applicato con successo
 - [ ] Testare dark mode manualmente (cliccare toggle)
 - [ ] Salvare checkpoint
+
+## 🎨 Fix Input Fields Testi Neri StructureDetailView Dark Mode (COMPLETATO)
+- [x] Identificati input fields con testo nero: quantità (+6), prezzo apertura (100), volatilità (15), commissioni (2, 2)
+- [x] Applicato text-white a 5 input in StructureDetailView:
+  * Prezzo Apertura (riga 604)
+  * Prezzo Chiusura (riga 605)
+  * Volatilità Implicita (riga 637)
+  * Commissione Apertura (riga 654)
+  * Commissione Chiusura (riga 655)
+- [x] Applicato text-white a 2 componenti Selector:
+  * QuantitySelector.tsx (riga 25)
+  * ExpiryDateSelector.tsx (riga 154)
+  * StrikeSelector.tsx già aveva text-white (riga 133)
+- [x] HMR applicato con successo
+- [ ] Testare dark mode manualmente (aprire struttura e verificare testi bianchi)
+- [ ] Salvare checkpoint

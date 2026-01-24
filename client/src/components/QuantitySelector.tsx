@@ -22,7 +22,7 @@ const QuantitySelector: React.FC<QuantitySelectorProps> = ({ value, onChange, di
             value={value}
             onChange={handleChange}
             disabled={disabled}
-            className={className}
+            className={`${className} text-white`}
         >
             <optgroup label="Acquisto (Long)">
                 {buyOptions.map(qty => (

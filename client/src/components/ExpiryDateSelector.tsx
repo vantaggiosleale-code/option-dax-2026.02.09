@@ -151,7 +151,7 @@ const ExpiryDateSelector: React.FC<ExpiryDateSelectorProps> = ({ value, onChange
             value={value}
             onChange={(e) => onChange(e.target.value)}
             disabled={disabled}
-            className={className}
+            className={`${className} text-white`}
         >
             {displayGroups.map(group => (
                 <optgroup key={group.monthLabel} label={group.monthLabel}>
