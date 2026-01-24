@@ -36,12 +36,19 @@ export function Sidebar({ currentView, onNavigate, isOpen = false }: SidebarProp
           borderColor: theme === 'light' ? '#e5e7eb' : '#1f2937',
         }}
       >
-        <h1 
-          className="text-xl font-bold antialiased"
-          style={{ color: theme === 'light' ? '#111827' : '#ffffff' }}
-        >
-          Option DAX
-        </h1>
+        <div className="flex items-center gap-3">
+          <img 
+            src="/juventus-logo.png" 
+            alt="Juventus Logo" 
+            className="w-auto h-11"
+          />
+          <h1 
+            className="text-xl font-bold antialiased"
+            style={{ color: theme === 'light' ? '#111827' : '#ffffff' }}
+          >
+            Option DAX
+          </h1>
+        </div>
         <p 
           className="text-xs mt-1"
           style={{ color: theme === 'light' ? '#6b7280' : '#9ca3af' }}

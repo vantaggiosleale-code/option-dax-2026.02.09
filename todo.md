@@ -745,3 +745,12 @@
 - [x] Campo defaultMultiplier rimane nel database user_settings per compatibilità backward (non più usato dal frontend)
 - [x] HMR applicato con successo
 - [ ] Test manuale: andare in Impostazioni, verificare che "Prodotto di Default" sia solo in alto e "Greche di Default" contenga solo Volatilità e Risk-Free
+
+## Integrazione Logo Juventus come Logo Principale (COMPLETATO)
+- [x] Rimosso sfondo bianco dall'immagine logo con Python PIL (trasparenza fuori dall'ovale)
+- [x] Ottimizzato dimensioni: 27x45px (perfetto per header), 3.6 KB
+- [x] Salvato logo ottimizzato in client/public/juventus-logo.png
+- [x] Aggiornato Sidebar.tsx per mostrare logo accanto a "Option DAX" (flex gap-3)
+- [x] Logo visibile in alto a sinistra sidebar
+- [x] HMR applicato con successo
+- [ ] Test manuale: verificare rendering logo in light e dark mode
