@@ -833,3 +833,8 @@
 - [x] Ridurre dimensioni immagine (width/height) per evitare scrollbar
 - [x] Comprimere spazi vuoti (padding/margin) nel modale
 - [x] Verificare che l'immagine sia completamente visibile senza scrollbar
+
+## Fix Problemi Residui Modale GraphicTemplate
+- [x] Eliminare scrollbar orizzontale: ridurre width immagini e bottoni
+- [x] Rimuovere spazi vuoti nel footer: ottimizzare altezza
+- [x] Centrare immagine nel modale: aggiustare margini

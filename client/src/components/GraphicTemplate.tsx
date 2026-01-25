@@ -39,8 +39,8 @@ export function GraphicTemplate({ type, data }: GraphicTemplateProps) {
   if (type === 'apertura') {
     return (
       <div className="graphic-card" style={{
-        width: '500px',
-        height: '700px',
+        width: '420px',
+        height: '620px',
         background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
         color: 'white',
         padding: '24px',
@@ -141,8 +141,8 @@ export function GraphicTemplate({ type, data }: GraphicTemplateProps) {
   if (type === 'aggiustamento') {
     return (
       <div className="graphic-card" style={{
-        width: '500px',
-        height: '650px',
+        width: '420px',
+        height: '580px',
         background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
         color: 'white',
         padding: '24px',
@@ -259,8 +259,8 @@ export function GraphicTemplate({ type, data }: GraphicTemplateProps) {
   // Chiusura
   return (
     <div className="graphic-card" style={{
-      width: '500px',
-      height: '600px',
+      width: '420px',
+      height: '540px',
       background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
       color: 'white',
       padding: '24px',
