@@ -828,3 +828,8 @@
 ## Rendere Bianco Testo Bottone "Crea Nuova"
 - [x] Cambiare colore testo bottone da textPrimary a bianco (riga 268 StructureListView.tsx)
 - [x] Verificare visibilità in Light e Dark mode
+
+## Ridimensionare Immagine Modale GraphicTemplate
+- [x] Ridurre dimensioni immagine (width/height) per evitare scrollbar
+- [x] Comprimere spazi vuoti (padding/margin) nel modale
+- [x] Verificare che l'immagine sia completamente visibile senza scrollbar

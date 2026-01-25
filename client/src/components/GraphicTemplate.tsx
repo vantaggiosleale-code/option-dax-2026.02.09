@@ -39,24 +39,24 @@ export function GraphicTemplate({ type, data }: GraphicTemplateProps) {
   if (type === 'apertura') {
     return (
       <div className="graphic-card" style={{
-        width: '600px',
-        height: '1000px',
+        width: '500px',
+        height: '700px',
         background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
         color: 'white',
-        padding: '40px',
+        padding: '24px',
         fontFamily: 'system-ui, -apple-system, sans-serif',
         position: 'relative',
         overflow: 'hidden'
       }}>
         {/* Header */}
-        <div style={{ marginBottom: '30px' }}>
-          <div style={{ fontSize: '14px', color: '#94a3b8', marginBottom: '8px' }}>
+        <div style={{ marginBottom: '16px' }}>
+          <div style={{ fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>
             🇩🇪 DAX Options Trading
           </div>
-          <h1 style={{ fontSize: '32px', fontWeight: 'bold', margin: '0 0 16px 0' }}>
+          <h1 style={{ fontSize: '24px', fontWeight: 'bold', margin: '0 0 8px 0' }}>
             Nuova Operazione
           </h1>
-          <div style={{ fontSize: '18px', color: '#94a3b8' }}>
+          <div style={{ fontSize: '14px', color: '#94a3b8' }}>
             {data.tag}
           </div>
         </div>
@@ -65,52 +65,54 @@ export function GraphicTemplate({ type, data }: GraphicTemplateProps) {
         <div style={{
           background: 'rgba(255, 255, 255, 0.05)',
           borderRadius: '12px',
-          padding: '20px',
-          marginBottom: '30px',
-          border: '1px solid rgba(255, 255, 255, 0.1)'
+          padding: '12px',
+          marginBottom: '16px',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          fontSize: '12px'
         }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
             <span style={{ color: '#94a3b8' }}>Data Apertura</span>
             <span style={{ fontWeight: '600' }}>{data.date ? formatDate(data.date) : '-'}</span>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <span style={{ color: '#94a3b8' }}>DAX Spot</span>
-            <span style={{ fontWeight: '600', fontSize: '20px', color: '#3b82f6' }}>
+            <span style={{ fontWeight: '600', fontSize: '16px', color: '#3b82f6' }}>
               {data.daxSpot ? formatPrice(data.daxSpot) : '-'}
             </span>
           </div>
         </div>
 
         {/* Legs */}
-        <div style={{ marginBottom: '30px' }}>
-          <h2 style={{ fontSize: '18px', marginBottom: '16px', color: '#94a3b8' }}>
+        <div style={{ marginBottom: '16px' }}>
+          <h2 style={{ fontSize: '14px', marginBottom: '8px', color: '#94a3b8' }}>
             Gambe ({data.legs?.length || 0})
           </h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
             {data.legs?.map((leg, idx) => (
               <div key={idx} style={{
                 background: 'rgba(255, 255, 255, 0.05)',
                 borderRadius: '8px',
-                padding: '16px',
+                padding: '8px',
                 border: '1px solid rgba(255, 255, 255, 0.1)',
                 display: 'flex',
                 justifyContent: 'space-between',
-                alignItems: 'center'
+                alignItems: 'center',
+                fontSize: '11px'
               }}>
                 <div>
-                  <div style={{ fontWeight: '600', fontSize: '16px', marginBottom: '4px' }}>
+                  <div style={{ fontWeight: '600', fontSize: '12px', marginBottom: '2px' }}>
                     {leg.quantity > 0 ? 'Long' : 'Short'} {leg.optionType} {formatPrice(leg.strike)}
                   </div>
-                  <div style={{ fontSize: '14px', color: '#94a3b8' }}>
+                  <div style={{ fontSize: '10px', color: '#94a3b8' }}>
                     Qty: {Math.abs(leg.quantity)} • Prezzo: {formatPrice(leg.tradePrice)} • Scad: {formatDate(leg.expiryDate)}
                   </div>
                 </div>
                 <div style={{
                   background: leg.quantity > 0 ? '#10b981' : '#ef4444',
                   color: 'white',
-                  padding: '8px 16px',
+                  padding: '4px 8px',
                   borderRadius: '6px',
-                  fontSize: '16px',
+                  fontSize: '10px',
                   fontWeight: '700'
                 }}>
                   {leg.quantity > 0 ? 'LONG' : 'SHORT'}
@@ -123,12 +125,12 @@ export function GraphicTemplate({ type, data }: GraphicTemplateProps) {
         {/* Footer */}
         <div style={{
           position: 'absolute',
-          bottom: '40px',
-          left: '40px',
-          right: '40px',
+          bottom: '12px',
+          left: '24px',
+          right: '24px',
           textAlign: 'center',
           color: '#64748b',
-          fontSize: '12px'
+          fontSize: '10px'
         }}>
           Generated by Option DAX Trading System
         </div>
@@ -139,24 +141,24 @@ export function GraphicTemplate({ type, data }: GraphicTemplateProps) {
   if (type === 'aggiustamento') {
     return (
       <div className="graphic-card" style={{
-        width: '600px',
-        height: '1000px',
+        width: '500px',
+        height: '650px',
         background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
         color: 'white',
-        padding: '40px',
+        padding: '24px',
         fontFamily: 'system-ui, -apple-system, sans-serif',
         position: 'relative',
         overflow: 'hidden'
       }}>
         {/* Header */}
-        <div style={{ marginBottom: '30px' }}>
-          <div style={{ fontSize: '14px', color: '#94a3b8', marginBottom: '8px' }}>
+        <div style={{ marginBottom: '16px' }}>
+          <div style={{ fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>
             🇩🇪 DAX Options Trading
           </div>
-          <h1 style={{ fontSize: '32px', fontWeight: 'bold', margin: '0 0 16px 0' }}>
+          <h1 style={{ fontSize: '24px', fontWeight: 'bold', margin: '0 0 8px 0' }}>
             Aggiustamento
           </h1>
-          <div style={{ fontSize: '18px', color: '#94a3b8' }}>
+          <div style={{ fontSize: '14px', color: '#94a3b8' }}>
             {data.tag}
           </div>
         </div>
@@ -167,42 +169,42 @@ export function GraphicTemplate({ type, data }: GraphicTemplateProps) {
             ? 'rgba(16, 185, 129, 0.1)' 
             : 'rgba(239, 68, 68, 0.1)',
           borderRadius: '12px',
-          padding: '20px',
-          marginBottom: '30px',
+          padding: '12px',
+          marginBottom: '16px',
           border: `1px solid ${data.pnlPoints && data.pnlPoints >= 0 ? '#10b981' : '#ef4444'}`
         }}>
-          <div style={{ color: '#94a3b8', marginBottom: '8px' }}>P&L Parziale</div>
+          <div style={{ color: '#94a3b8', marginBottom: '4px', fontSize: '12px' }}>P&L Parziale</div>
           <div style={{
-            fontSize: '32px',
+            fontSize: '24px',
             fontWeight: 'bold',
             color: data.pnlPoints && data.pnlPoints >= 0 ? '#10b981' : '#ef4444'
           }}>
             {data.pnlEuro ? formatPnL(data.pnlEuro) : '-'} €
           </div>
-          <div style={{ fontSize: '16px', color: '#94a3b8', marginTop: '4px' }}>
+          <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '2px' }}>
             {data.pnlPoints ? formatPnL(data.pnlPoints) : '-'} punti
           </div>
         </div>
 
         {/* Closed Legs */}
         {data.closedLegs && data.closedLegs.length > 0 && (
-          <div style={{ marginBottom: '20px' }}>
-            <h2 style={{ fontSize: '16px', marginBottom: '12px', color: '#94a3b8' }}>
+          <div style={{ marginBottom: '12px' }}>
+            <h2 style={{ fontSize: '12px', marginBottom: '6px', color: '#94a3b8' }}>
               Gambe Chiuse ({data.closedLegs.length})
             </h2>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
               {data.closedLegs.map((leg, idx) => (
                 <div key={idx} style={{
                   background: 'rgba(239, 68, 68, 0.1)',
                   borderRadius: '8px',
-                  padding: '12px',
+                  padding: '6px',
                   border: '1px solid rgba(239, 68, 68, 0.3)',
-                  fontSize: '14px'
+                  fontSize: '11px'
                 }}>
-                  <div style={{ fontWeight: '600', marginBottom: '4px' }}>
+                  <div style={{ fontWeight: '600', marginBottom: '2px' }}>
                     {leg.quantity > 0 ? 'Long' : 'Short'} {leg.optionType} {formatPrice(leg.strike)}
                   </div>
-                  <div style={{ fontSize: '12px', color: '#94a3b8' }}>
+                  <div style={{ fontSize: '10px', color: '#94a3b8' }}>
                     Qty: {Math.abs(leg.quantity)} • Prezzo: {formatPrice(leg.tradePrice)} • Scad: {formatDate(leg.expiryDate)}
                   </div>
                 </div>
@@ -213,23 +215,23 @@ export function GraphicTemplate({ type, data }: GraphicTemplateProps) {
 
         {/* Added Legs */}
         {data.addedLegs && data.addedLegs.length > 0 && (
-          <div style={{ marginBottom: '30px' }}>
-            <h2 style={{ fontSize: '16px', marginBottom: '12px', color: '#94a3b8' }}>
+          <div style={{ marginBottom: '12px' }}>
+            <h2 style={{ fontSize: '12px', marginBottom: '6px', color: '#94a3b8' }}>
               Gambe Aggiunte ({data.addedLegs.length})
             </h2>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
               {data.addedLegs.map((leg, idx) => (
                 <div key={idx} style={{
                   background: 'rgba(16, 185, 129, 0.1)',
                   borderRadius: '8px',
-                  padding: '12px',
+                  padding: '6px',
                   border: '1px solid rgba(16, 185, 129, 0.3)',
-                  fontSize: '14px'
+                  fontSize: '11px'
                 }}>
-                  <div style={{ fontWeight: '600', marginBottom: '4px' }}>
+                  <div style={{ fontWeight: '600', marginBottom: '2px' }}>
                     {leg.quantity > 0 ? 'Long' : 'Short'} {leg.optionType} {formatPrice(leg.strike)}
                   </div>
-                  <div style={{ fontSize: '12px', color: '#94a3b8' }}>
+                  <div style={{ fontSize: '10px', color: '#94a3b8' }}>
                     Qty: {Math.abs(leg.quantity)} • Prezzo: {formatPrice(leg.tradePrice)} • Scad: {formatDate(leg.expiryDate)}
                   </div>
                 </div>
@@ -241,12 +243,12 @@ export function GraphicTemplate({ type, data }: GraphicTemplateProps) {
         {/* Footer */}
         <div style={{
           position: 'absolute',
-          bottom: '40px',
-          left: '40px',
-          right: '40px',
+          bottom: '12px',
+          left: '24px',
+          right: '24px',
           textAlign: 'center',
           color: '#64748b',
-          fontSize: '12px'
+          fontSize: '10px'
         }}>
           Generated by Option DAX Trading System
         </div>
@@ -257,11 +259,11 @@ export function GraphicTemplate({ type, data }: GraphicTemplateProps) {
   // Chiusura
   return (
     <div className="graphic-card" style={{
-      width: '600px',
-      height: '800px',
+      width: '500px',
+      height: '600px',
       background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
       color: 'white',
-      padding: '40px',
+      padding: '24px',
       fontFamily: 'system-ui, -apple-system, sans-serif',
       position: 'relative',
       overflow: 'hidden',
@@ -271,14 +273,14 @@ export function GraphicTemplate({ type, data }: GraphicTemplateProps) {
       alignItems: 'center'
     }}>
       {/* Header */}
-      <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-        <div style={{ fontSize: '14px', color: '#94a3b8', marginBottom: '8px' }}>
+      <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+        <div style={{ fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>
           🇩🇪 DAX Options Trading
         </div>
-        <h1 style={{ fontSize: '36px', fontWeight: 'bold', margin: '0 0 16px 0' }}>
+        <h1 style={{ fontSize: '28px', fontWeight: 'bold', margin: '0 0 8px 0' }}>
           Chiusura Totale
         </h1>
-        <div style={{ fontSize: '20px', color: '#94a3b8' }}>
+        <div style={{ fontSize: '16px', color: '#94a3b8' }}>
           {data.tag}
         </div>
       </div>
@@ -289,24 +291,24 @@ export function GraphicTemplate({ type, data }: GraphicTemplateProps) {
           ? 'rgba(16, 185, 129, 0.1)' 
           : 'rgba(239, 68, 68, 0.1)',
         borderRadius: '16px',
-        padding: '40px',
-        marginBottom: '40px',
+        padding: '24px',
+        marginBottom: '24px',
         border: `2px solid ${data.pnlPoints && data.pnlPoints >= 0 ? '#10b981' : '#ef4444'}`,
         textAlign: 'center',
-        minWidth: '400px'
+        minWidth: '300px'
       }}>
-        <div style={{ color: '#94a3b8', marginBottom: '12px', fontSize: '18px' }}>
+        <div style={{ color: '#94a3b8', marginBottom: '8px', fontSize: '14px' }}>
           Risultato Finale
         </div>
         <div style={{
-          fontSize: '48px',
+          fontSize: '36px',
           fontWeight: 'bold',
           color: data.pnlPoints && data.pnlPoints >= 0 ? '#10b981' : '#ef4444',
-          marginBottom: '8px'
+          marginBottom: '4px'
         }}>
           {data.pnlEuro ? formatPnL(data.pnlEuro) : '-'} €
         </div>
-        <div style={{ fontSize: '20px', color: '#94a3b8' }}>
+        <div style={{ fontSize: '14px', color: '#94a3b8' }}>
           {data.pnlPoints ? formatPnL(data.pnlPoints) : '-'} punti
         </div>
       </div>
@@ -315,17 +317,18 @@ export function GraphicTemplate({ type, data }: GraphicTemplateProps) {
       <div style={{
         background: 'rgba(255, 255, 255, 0.05)',
         borderRadius: '12px',
-        padding: '24px',
+        padding: '16px',
         border: '1px solid rgba(255, 255, 255, 0.1)',
-        minWidth: '400px'
+        minWidth: '300px',
+        fontSize: '12px'
       }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
           <span style={{ color: '#94a3b8' }}>Data Apertura</span>
           <span style={{ fontWeight: '600' }}>
             {data.openingDate ? formatDate(data.openingDate) : '-'}
           </span>
         </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
           <span style={{ color: '#94a3b8' }}>Data Chiusura</span>
           <span style={{ fontWeight: '600' }}>
             {data.closingDate ? formatDate(data.closingDate) : '-'}
@@ -342,12 +345,12 @@ export function GraphicTemplate({ type, data }: GraphicTemplateProps) {
       {/* Footer */}
       <div style={{
         position: 'absolute',
-        bottom: '40px',
-        left: '40px',
-        right: '40px',
+        bottom: '12px',
+        left: '24px',
+        right: '24px',
         textAlign: 'center',
         color: '#64748b',
-        fontSize: '12px'
+        fontSize: '10px'
       }}>
         Generated by Option DAX Trading System
       </div>
