@@ -838,3 +838,34 @@
 - [x] Eliminare scrollbar orizzontale: ridurre width immagini e bottoni
 - [x] Rimuovere spazi vuoti nel footer: ottimizzare altezza
 - [x] Centrare immagine nel modale: aggiustare margini
+
+
+## Sistema di Approvazione Account (Nuova Feature)
+
+### Database & Backend
+- [x] Estendere schema `users` con campo `status` (enum: pending/approved/rejected)
+- [x] Creare tabella `approval_requests` per tracciare richieste di approvazione
+- [ ] Implementare tRPC procedure per approvare/rifiutare account
+- [ ] Implementare notifica email a vantaggiosleale@gmail.com per nuove iscrizioni
+- [ ] Implementare tRPC procedure per ottenere lista account in pending
+
+### Landing Page
+- [x] Creare componente LandingPage con logo placeholder
+- [x] Implementare login SOLO Google (rimuovere altri provider)
+- [x] Aggiungere checkbox disclaimer obbligatorio
+- [x] Disabilitare pulsante login finché checkbox non è spuntato
+- [x] Stile moderno minimalista coerente con app
+
+### Logica di Accesso
+- [ ] Modificare flusso OAuth: dopo login, creare account in stato "pending"
+- [ ] Creare pagina di attesa post-iscrizione con messaggio "Iscrizione in sospeso. Potrai entrare una volta che un amministratore avrà provato la tua iscrizione"
+- [x] Implementare redirect: pending → pagina attesa, approved → dashboard
+- [x] Nascondere landing page per account loggati
+
+### Pannello Approvazioni Admin
+- [ ] Creare componente ApprovalsPanel in sezione Impostazioni
+- [ ] Mostrare lista account in pending con email e data iscrizione
+- [ ] Implementare pulsanti Approva/Rifiuta per ogni account
+- [ ] Aggiungere badge rosso con numero account in sospeso
+- [ ] Badge visibile nella sidebar per quick access
+- [ ] Implementare logica approvazione/rifiuto con notifiche email all'utente

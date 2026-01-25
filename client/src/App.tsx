@@ -16,6 +16,7 @@ import { Sidebar } from './components/Sidebar';
 import PayoffSimulator from './components/PayoffSimulator';
 import GreeksCalculator from './components/GreeksCalculator';
 import { useTheme } from './contexts/ThemeContext';
+import { LandingPage } from './pages/LandingPage';
 // History.tsx rimosso - sostituito con PortfolioAnalysis
 
 const App: React.FC = () => {
@@ -40,6 +41,9 @@ const App: React.FC = () => {
     };
     const { user, loading, isAuthenticated, logout } = useAuth();
     const { theme } = useTheme();
+    
+    // Show landing page if user is not authenticated OR if authenticated but status is 'pending'
+    const showLandingPage = !isAuthenticated || (user?.status === 'pending');
 
     const handleLogout = async () => {
         await logout();
@@ -69,6 +73,11 @@ const App: React.FC = () => {
             default:
                 return <StructureListView setCurrentView={handleSetCurrentView} />;
         }
+    }
+
+    // Show landing page instead of app if user is not authenticated or pending approval
+    if (showLandingPage) {
+        return <LandingPage />;
     }
 
     return (
