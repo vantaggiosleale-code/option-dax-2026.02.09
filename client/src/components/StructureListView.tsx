@@ -265,7 +265,7 @@ const StructureListView: React.FC<StructureListViewProps> = ({ setCurrentView })
                         <div className="flex items-center space-x-2">
                             <button 
                                 onClick={() => setCurrentView('detail', 'new')}
-                                className="flex items-center justify-center bg-accent hover:bg-accent  font-semibold p-2 md:py-2 md:px-3 rounded-md transition" style={{ color: textPrimary }}
+                                className="flex items-center justify-center bg-accent hover:bg-accent  font-semibold p-2 md:py-2 md:px-3 rounded-md transition text-white"
                                 title="Crea Nuova Struttura"
                             >
                                 <PlusIcon />

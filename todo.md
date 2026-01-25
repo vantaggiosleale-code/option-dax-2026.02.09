@@ -824,3 +824,7 @@
 ## Fix Missing Key Props in StructureDetailView
 - [x] Aggiungere id: leg.id al mapping delle gambe nel handleSave()
 - [x] Verificare che tutti i .map() abbiano key unici e stabili
+
+## Rendere Bianco Testo Bottone "Crea Nuova"
+- [x] Cambiare colore testo bottone da textPrimary a bianco (riga 268 StructureListView.tsx)
+- [x] Verificare visibilità in Light e Dark mode
