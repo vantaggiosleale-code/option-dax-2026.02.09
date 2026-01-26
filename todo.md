@@ -897,3 +897,11 @@
 - [x] Modificato sameSite cookie da "none" a "lax" per compatibilità domini custom
 - [x] Implementare invio email notifica quando admin approva utente (già implementato)
 - [ ] Testare flusso completo dopo pubblicazione: registrazione → pending page → approvazione → email → accesso dashboard
+
+
+## Fix Creazione Approval Request (COMPLETATO)
+- [x] Modificare upsertUser per creare automaticamente approval_request quando nuovo utente si registra
+- [x] Verificare che approval_request venga creato con status 'pending'
+- [ ] Testare che pannello Approvazioni mostri nuovi utenti (dopo pubblicazione)
+- [ ] Testare che badge rosso appaia con contatore corretto (dopo pubblicazione)
+- [ ] Testare invio email quando admin approva dal pannello (dopo pubblicazione)

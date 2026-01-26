@@ -99,9 +99,29 @@ export async function upsertUser(user: InsertUser): Promise<void> {
       updateSet.lastSignedIn = new Date();
     }
 
-    await db.insert(users).values(values).onDuplicateKeyUpdate({
+    const result = await db.insert(users).values(values).onDuplicateKeyUpdate({
       set: updateSet,
     });
+
+    // If this is a new user (not an update), create approval_request
+    // Check if this was an insert (not an update) by checking if insertId exists
+    if (result[0].insertId && result[0].insertId > 0) {
+      try {
+        // Get the newly created user to get their ID
+        const newUser = await getUserByOpenId(user.openId);
+        if (newUser && newUser.status === 'pending') {
+          // Create approval request for pending users
+          await db.insert(approvalRequests).values({
+            userId: newUser.id,
+            status: 'pending',
+          });
+          console.log(`[Database] Created approval_request for new user: ${newUser.email}`);
+        }
+      } catch (approvalError) {
+        // Log error but don't fail the user creation
+        console.error("[Database] Failed to create approval_request:", approvalError);
+      }
+    }
   } catch (error) {
     console.error("[Database] Failed to upsert user:", error);
     throw error;
