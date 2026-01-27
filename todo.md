@@ -911,3 +911,7 @@
 - [x] Sostituire logo Juventus con logo Option DAX in sidebar/header
 - [x] Sostituire favicon (icona tab browser) con logo Option DAX
 - [x] Sostituire logo nella landing page con logo Option DAX
+
+## Fix Logo Landing Page
+- [x] Creare versione circolare del logo per landing page (piccolo e rotondo)
+- [x] Ridisegnare sezione logo landing page con dimensioni ridotte
