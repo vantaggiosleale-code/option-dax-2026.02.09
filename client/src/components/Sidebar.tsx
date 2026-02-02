@@ -1,4 +1,4 @@
-import { LayoutDashboard, TrendingUp, Calculator, History, Settings, Sun, Moon, Globe, CheckCircle } from 'lucide-react';
+import { LayoutDashboard, TrendingUp, Calculator, History, Settings, Sun, Moon, Globe, CheckCircle, Lightbulb } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 
 interface SidebarProps {
@@ -18,6 +18,7 @@ export function Sidebar({ currentView, onNavigate, isOpen = false, isAdmin = fal
     { id: 'greeks', label: 'Calcolatore Greche', icon: Calculator },
     { id: 'history', label: 'Storico', icon: History },
     { id: 'public', label: 'Strutture Pubbliche', icon: Globe },
+    { id: 'proposte', label: 'Proposte', icon: Lightbulb },
   ];
   
   const navItems = isAdmin 

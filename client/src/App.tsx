@@ -19,14 +19,15 @@ import { useTheme } from './contexts/ThemeContext';
 import { LandingPage } from './pages/LandingPage';
 import { PendingApprovalPage } from './pages/PendingApprovalPage';
 import { ApprovalsView } from './components/ApprovalsView';
+import { ProposteView } from './components/ProposteView';
 // History.tsx rimosso - sostituito con PortfolioAnalysis
 
 const App: React.FC = () => {
-    const [currentView, setCurrentView] = React.useState<'dashboard' | 'payoff' | 'greeks' | 'history' | 'settings' | 'detail' | 'analysis' | 'public' | 'test' | 'approvals'>('dashboard');
+    const [currentView, setCurrentView] = React.useState<'dashboard' | 'payoff' | 'greeks' | 'history' | 'settings' | 'detail' | 'analysis' | 'public' | 'test' | 'approvals' | 'proposte'>('dashboard');
     const [currentStructureId, setCurrentStructureId] = React.useState<number | 'new' | null>(null);
     const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
     
-    const handleSetCurrentView = (view: 'dashboard' | 'payoff' | 'greeks' | 'history' | 'settings' | 'detail' | 'analysis' | 'public' | 'test' | 'approvals', structureId?: number | 'new' | null) => {
+    const handleSetCurrentView = (view: 'dashboard' | 'payoff' | 'greeks' | 'history' | 'settings' | 'detail' | 'analysis' | 'public' | 'test' | 'approvals' | 'proposte', structureId?: number | 'new' | null) => {
         setCurrentView(view);
         if (structureId !== undefined) {
             setCurrentStructureId(structureId);
@@ -91,6 +92,8 @@ const App: React.FC = () => {
                 return <SimpleGraphicTest />;
             case 'approvals':
                 return <ApprovalsView />;
+            case 'proposte':
+                return <ProposteView />;
             default:
                 return <StructureListView setCurrentView={handleSetCurrentView} />;
         }

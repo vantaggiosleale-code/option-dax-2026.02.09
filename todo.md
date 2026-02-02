@@ -915,3 +915,8 @@
 ## Fix Logo Landing Page
 - [x] Creare versione circolare del logo per landing page (piccolo e rotondo)
 - [x] Ridisegnare sezione logo landing page con dimensioni ridotte
+
+## Integrazione Google Form Proposte
+- [x] Creare componente ProposteView con Google Form incorporato
+- [x] Aggiungere voce "Proposte" nella sidebar
+- [x] Aggiungere routing per pagina /proposte in App.tsx
