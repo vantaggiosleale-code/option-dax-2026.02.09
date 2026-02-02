@@ -929,3 +929,6 @@
 
 ## Fix Header Light Mode Proposte
 - [x] Sistemare colori header ProposteView in light mode (sfondo bianco, testo nero)
+
+## Correzione Link Google Form
+- [x] Sostituire URL Google Form con link corretto fornito dall'utente

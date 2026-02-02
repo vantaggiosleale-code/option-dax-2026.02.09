@@ -34,7 +34,7 @@ export function ProposteView() {
       {/* Google Form Container */}
       <div className="flex-1 overflow-hidden" style={{ backgroundColor: containerBg }}>
         <iframe
-          src="https://docs.google.com/forms/d/e/1FAIpQLSdzw52iwYenknu3r8Rn2q2BTdANSCoVxAXUFnxfDfn3o7xSlg/viewform?embedded=true"
+          src="https://docs.google.com/forms/d/e/1FAIpQLSeU6SV7tzrtX3Bsc_KqhLkP-yp70SfW_HD8vt7lj7GB9-8E6g/viewform?embedded=true"
           width="100%"
           height="100%"
           frameBorder="0"
