@@ -920,3 +920,9 @@
 - [x] Creare componente ProposteView con Google Form incorporato
 - [x] Aggiungere voce "Proposte" nella sidebar
 - [x] Aggiungere routing per pagina /proposte in App.tsx
+
+## Aggiornamento Link Google Form
+- [x] Aggiornare URL Google Form in ProposteView con link pubblico (chiunque abbia il link)
+
+## Fix Estetica Header Proposte
+- [x] Adattare colori header ProposteView al tema light/dark (bianco in light, blu scuro in dark)
