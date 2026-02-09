@@ -32,6 +32,9 @@ export const optionLegSchema = z.object({
   // Optional metadata
   notes: z.string().optional(),
   id: z.union([z.string(), z.number()]).optional(), // Unique identifier for the leg (string or number)
+  
+  // Active/inactive state for simulation purposes
+  isActive: z.boolean().optional().default(true), // Default true - all legs are active by default
 });
 
 /**

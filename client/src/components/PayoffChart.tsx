@@ -99,7 +99,10 @@ const PayoffChart: React.FC<PayoffChartProps> = ({ legs, marketData, multiplier 
         let pnlTodayPoints = 0;
         let realizedPnlOffset = 0;
 
-        legs.forEach((leg: OptionLeg) => {
+        // Filter only active legs (isActive !== false)
+        const activeLegs = legs.filter(leg => leg.isActive !== false);
+
+        activeLegs.forEach((leg: OptionLeg) => {
             const isClosed = leg.closingPrice !== null && leg.closingPrice !== undefined;
 
             if (isClosed) {
@@ -157,8 +160,11 @@ const PayoffChart: React.FC<PayoffChartProps> = ({ legs, marketData, multiplier 
         const steps = 200;
         const stepSize = (maxPrice - minPrice) / steps;
 
+        // Filter only active legs (isActive !== false)
+        const activeLegs = legs.filter(leg => leg.isActive !== false);
+
         let realizedPnlOffset = 0;
-        legs.forEach((leg: OptionLeg) => {
+        activeLegs.forEach((leg: OptionLeg) => {
             const isClosed = leg.closingPrice !== null && leg.closingPrice !== undefined;
             if (isClosed) {
                 let pnlPoints = 0;
@@ -180,7 +186,7 @@ const PayoffChart: React.FC<PayoffChartProps> = ({ legs, marketData, multiplier 
         let pnlAtExpiryPoints = 0;
         let pnlTodayPoints = 0;
 
-        legs.forEach((leg: OptionLeg) => {
+        activeLegs.forEach((leg: OptionLeg) => {
             const isClosed = leg.closingPrice !== null && leg.closingPrice !== undefined;
             if (isClosed) return;
 

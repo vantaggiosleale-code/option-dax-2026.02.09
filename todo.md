@@ -932,3 +932,14 @@
 
 ## Correzione Link Google Form
 - [x] Sostituire URL Google Form con link corretto fornito dall'utente
+
+## Checkbox Attiva/Disattiva Gambe
+- [x] Analizzare schema database e struttura dati gambe
+- [x] Aggiungere campo isActive (boolean, default true) alla tabella legs
+- [x] Modificare logica calcolo payoff per filtrare gambe attive
+- [x] Modificare logica calcolo greche per filtrare gambe attive
+- [x] Modificare logica calcolo P- [x] Modificare logica calcolo P&L per filtrare gambe attiveL per filtrare gambe attive
+- [x] Aggiungere checkbox UI accanto ad ogni gamba
+- [x] Implementare toggle checkbox con aggiornamento real-time
+- [x] Testare che gambe disattivate non influenzino calcoli
+- [x] Testare che gambe riattivate ripristinino calcoli corretti

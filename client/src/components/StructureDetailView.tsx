@@ -602,9 +602,20 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
                              const extrinsicValue = (leg.tradePrice ?? 0) - intrinsicValue;
 
                              return (
-                             <div key={leg.id} className={`bg-gray-700 p-3 rounded-md space-y-2 ${isReadOnly ? 'opacity-60' : ''}`}>
+                             <div key={leg.id} className={`bg-gray-700 p-3 rounded-md space-y-2 ${isReadOnly ? 'opacity-60' : ''} ${leg.isActive === false ? 'opacity-40 border-2 border-dashed border-gray-500' : ''}`}>
                                 <div className="flex justify-between items-center">
-                                    <span className="font-bold text-white">Gamba {index + 1}</span>
+                                    <div className="flex items-center gap-2">
+                                        {/* Checkbox per attivare/disattivare gamba */}
+                                        <input
+                                            type="checkbox"
+                                            checked={leg.isActive !== false}
+                                            onChange={(e) => handleLegChange(leg.id, 'isActive', e.target.checked)}
+                                            disabled={isReadOnly}
+                                            className="w-4 h-4 text-green-600 bg-gray-600 border-gray-500 rounded focus:ring-green-500 focus:ring-2 cursor-pointer disabled:cursor-not-allowed"
+                                            title={leg.isActive !== false ? 'Gamba attiva (inclusa nei calcoli)' : 'Gamba disattivata (esclusa dai calcoli)'}
+                                        />
+                                        <span className={`font-bold ${leg.isActive !== false ? 'text-white' : 'text-gray-500 line-through'}`}>Gamba {index + 1}</span>
+                                    </div>
                                     {!isReadOnly && (
                                         <button onClick={() => removeLeg(leg.id)} className="text-gray-400 hover:text-loss p-1 rounded-full">
                                             <TrashIcon />

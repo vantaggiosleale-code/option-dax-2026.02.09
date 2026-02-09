@@ -18,7 +18,10 @@ const calculateTotalGreeks = (structure: Structure, marketData: MarketData): Cal
     const initialGreeks = { delta: 0, gamma: 0, theta: 0, vega: 0 };
     if (!structure.legs || structure.legs.length === 0) return initialGreeks;
 
-    return structure.legs.reduce((acc, leg) => {
+    // Filter only active legs (isActive !== false)
+    const activeLegs = structure.legs.filter(leg => leg.isActive !== false);
+
+    return activeLegs.reduce((acc, leg) => {
         const timeToExpiry = getTimeToExpiry(leg.expiryDate);
         const bs = new BlackScholes(marketData.daxSpot, leg.strike, timeToExpiry, marketData.riskFreeRate, leg.impliedVolatility);
         const greeks = leg.optionType === 'Call' ? bs.callGreeks() : bs.putGreeks();
@@ -34,7 +37,9 @@ const calculateTotalGreeks = (structure: Structure, marketData: MarketData): Cal
 
 const calculateNetPremium = (structure: Structure): number => {
     if (!structure.legs || structure.legs.length === 0) return 0;
-    const totalPremium = structure.legs.reduce((acc, leg) => {
+    // Filter only active legs (isActive !== false)
+    const activeLegs = structure.legs.filter(leg => leg.isActive !== false);
+    const totalPremium = activeLegs.reduce((acc, leg) => {
         // A positive quantity (long position) means a debit (cost).
         // A negative quantity (short position) means a credit (income).
         // The algebraic sum gives a positive value for net debit and negative for net credit.
@@ -49,7 +54,10 @@ const calculateUnrealizedPnlForStructure = (structure: Structure, marketData: Ma
         return 0;
     }
 
-    const totalNetPnl = structure.legs.reduce((acc, leg) => {
+    // Filter only active legs (isActive !== false)
+    const activeLegs = structure.legs.filter(leg => leg.isActive !== false);
+
+    const totalNetPnl = activeLegs.reduce((acc, leg) => {
         // Check if leg has manual closing price
         const hasManualClosingPrice = leg.closingPrice !== null && leg.closingPrice !== undefined;
         

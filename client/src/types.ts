@@ -11,6 +11,7 @@ export interface OptionLeg {
   impliedVolatility: number; // as percentage, e.g., 18.5
   openingCommission?: number;
   closingCommission?: number;
+  isActive?: boolean; // Active/inactive state for simulation purposes (default true)
 }
 
 export interface MarketData {
