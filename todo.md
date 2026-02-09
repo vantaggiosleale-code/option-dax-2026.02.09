@@ -943,3 +943,9 @@
 - [x] Implementare toggle checkbox con aggiornamento real-time
 - [x] Testare che gambe disattivate non influenzino calcoli
 - [x] Testare che gambe riattivate ripristinino calcoli corretti
+## Fix Campo Tasso Risk-Free
+- [x] Identificare componente campo Tasso Risk-Free in StructureDetailView
+- [x] Analizzare causa bug incremento automatico decimali
+- [x] Rimuovere event listener che causa incremento automatico
+- [x] Permettere digitazione libera del valore decimale
+- [ ] Testare digitazione corretta (es. 1.95, 2.50, 0.75)
