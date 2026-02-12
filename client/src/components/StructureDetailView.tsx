@@ -456,12 +456,15 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
                 : Math.max(0, leg.strike - marketData.daxSpot);
         }
         const riskFreeRate = localStructure.riskFreeRate ? parseFloat(localStructure.riskFreeRate) : 0.02;
+        // IMPORTANTE: Usa VI default dalle impostazioni per calcolare prezzo teorico di mercato
+        // NON usare leg.impliedVolatility (che è calcolata dal prezzo reale) per evitare circolo vizioso
+        const defaultVolatility = userSettings?.defaultVolatility ? parseFloat(userSettings.defaultVolatility) : 0.18;
         const bsResult = calculateBlackScholes({
             spotPrice: marketData.daxSpot,
             strikePrice: leg.strike,
             timeToExpiry,
             riskFreeRate: percentToDecimal(riskFreeRate),
-            volatility: percentToDecimal(leg.impliedVolatility),
+            volatility: defaultVolatility, // Usa VI default invece di leg.impliedVolatility
             optionType: leg.optionType === 'Call' ? 'call' : 'put'
         });
         return bsResult.optionPrice;

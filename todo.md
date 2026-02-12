@@ -972,3 +972,15 @@
 - [x] "Spegnere" calcolatore VI per gambe chiuse (mostra "VI non applicabile")
 - [ ] Testare calcolo VI con diversi prezzi di apertura su gambe aperte
 - [ ] Verificare che VI si aggiorni quando cambio prezzo apertura
+
+## Correzione Prezzo Teorico con VI Default (URGENT)
+- [x] Analizzare schema database settings per campo defaultImpliedVolatility
+- [x] Modificare StructureDetailView per leggere VI default da settings
+- [x] Cambiare calcolo Prezzo Teorico: usare VI default invece di VI calcolata
+- [x] Aggiornare calcolo P&L posizioni aperte con nuovo Prezzo Teorico (automatico via calculateTheoreticalPrice)
+- [x] Verificare che Dashboard mostri P&L realistico per gambe aperte (LS76: €167.00, 2DD01: €-4651.95)
+- [x] Testare con diversi valori di VI default nelle impostazioni (testato con 2DD01)
+- [x] Verificato che Prezzo Teorico usa VI default (15%) invece di VI calcolata (10.8%)
+- [x] Verificato che P&L posizioni aperte è realistico (€42.05 per 2DD01)
+- [x] Verificato che gamba chiusa mostra "VI non applicabile"
+- [ ] Documentare workflow: aggiornare VI default quando cambia regime volatilità
