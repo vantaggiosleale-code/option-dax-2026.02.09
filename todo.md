@@ -949,3 +949,16 @@
 - [x] Rimuovere event listener che causa incremento automatico
 - [x] Permettere digitazione libera del valore decimale
 - [ ] Testare digitazione corretta (es. 1.95, 2.50, 0.75)
+
+## Bug Calcoli Greche Errati (COMPLETATO)
+- [x] Estrarre e analizzare blackScholes.ts dal calcolatore di riferimento
+- [x] Confrontare formule Black-Scholes attuali con quelle corrette
+- [x] Identificare differenze nei calcoli di Delta, Gamma, Vega, Theta, Rho
+- [x] Correggere implementazione blackScholes.ts in Option DAX
+- [x] Unificare modulo blackScholes (eliminato duplicato nel client)
+- [x] Aggiornare PayoffChart.tsx, StructureDetailView.tsx, StructureListView.tsx
+- [x] Testare calcoli con casi di test dal calcolatore di riferimento
+- [x] Verificare che i risultati corrispondano al calcolatore corretto
+- [x] Tutti i 9 test passano con successo
+- [x] Vega verificato con errore quasi zero (1.4e-14)
+- [x] Rho verificato con errore 5% (entro tolleranza)

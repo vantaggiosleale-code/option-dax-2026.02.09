@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { OptionLeg, MarketData, Structure, CalculatedGreeks } from '../types';
-import { BlackScholes, getTimeToExpiry, calculateImpliedVolatility } from '../services/blackScholes';
+import { calculateBlackScholes, getTimeToExpiry, calculateImpliedVolatility, percentToDecimal } from '../../../shared/blackScholes';
 import { useStructures } from '../hooks/useStructures';
 import { trpc } from '../lib/trpc';
 import useSettingsStore from '../store/settingsStore';
@@ -318,8 +318,15 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
         const riskFreeRate = localStructure.riskFreeRate ? parseFloat(localStructure.riskFreeRate) : 0.02;
         const legGreeks = openLegs.map(leg => {
             const timeToExpiry = getTimeToExpiry(leg.expiryDate);
-            const bs = new BlackScholes(marketData.daxSpot, leg.strike, timeToExpiry, riskFreeRate, leg.impliedVolatility);
-            const greeks = leg.optionType === 'Call' ? bs.callGreeks() : bs.putGreeks();
+            const bsResult = calculateBlackScholes({
+                spotPrice: marketData.daxSpot,
+                strikePrice: leg.strike,
+                timeToExpiry,
+                riskFreeRate: percentToDecimal(riskFreeRate),
+                volatility: percentToDecimal(leg.impliedVolatility),
+                optionType: leg.optionType === 'Call' ? 'call' : 'put'
+            });
+            const greeks = { delta: bsResult.delta, gamma: bsResult.gamma, theta: bsResult.theta, vega: bsResult.vega };
             
             // FIX: Greeks are calculated purely in points here. Monetization is handled in the render.
             return {
@@ -370,8 +377,15 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
                 let currentPrice = 0;
                 if (timeToExpiry > 0) {
                      const riskFreeRate = localStructure.riskFreeRate ? parseFloat(localStructure.riskFreeRate) : 0.02;
-                     const bs = new BlackScholes(marketData.daxSpot, leg.strike, timeToExpiry, riskFreeRate, leg.impliedVolatility);
-                     currentPrice = leg.optionType === 'Call' ? bs.callPrice() : bs.putPrice();
+                     const bsResult = calculateBlackScholes({
+                         spotPrice: marketData.daxSpot,
+                         strikePrice: leg.strike,
+                         timeToExpiry,
+                         riskFreeRate: percentToDecimal(riskFreeRate),
+                         volatility: percentToDecimal(leg.impliedVolatility),
+                         optionType: leg.optionType === 'Call' ? 'call' : 'put'
+                     });
+                     currentPrice = bsResult.optionPrice;
                 } else { // If expired, value is intrinsic value.
                      currentPrice = leg.optionType === 'Call' ? Math.max(0, marketData.daxSpot - leg.strike) : Math.max(0, leg.strike - marketData.daxSpot);
                 }
@@ -442,8 +456,15 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
                 : Math.max(0, leg.strike - marketData.daxSpot);
         }
         const riskFreeRate = localStructure.riskFreeRate ? parseFloat(localStructure.riskFreeRate) : 0.02;
-        const bs = new BlackScholes(marketData.daxSpot, leg.strike, timeToExpiry, riskFreeRate, leg.impliedVolatility);
-        return leg.optionType === 'Call' ? bs.callPrice() : bs.putPrice();
+        const bsResult = calculateBlackScholes({
+            spotPrice: marketData.daxSpot,
+            strikePrice: leg.strike,
+            timeToExpiry,
+            riskFreeRate: percentToDecimal(riskFreeRate),
+            volatility: percentToDecimal(leg.impliedVolatility),
+            optionType: leg.optionType === 'Call' ? 'call' : 'put'
+        });
+        return bsResult.optionPrice;
     };
 
     // Controllo per evitare errori quando localStructure è null

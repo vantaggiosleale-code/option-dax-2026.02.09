@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine, ReferenceDot } from 'recharts';
 import { MarketData, OptionLeg } from '../types';
-import { BlackScholes, getTimeToExpiry } from '../services/blackScholes';
+import { calculateBlackScholes, getTimeToExpiry, percentToDecimal } from '../../../shared/blackScholes';
 import { useTheme } from '../contexts/ThemeContext';
 
 interface PayoffChartProps {
@@ -130,8 +130,15 @@ const PayoffChart: React.FC<PayoffChartProps> = ({ legs, marketData, multiplier 
 
             const timeToExpiry = getTimeToExpiry(leg.expiryDate);
             if (timeToExpiry > 0) {
-                const bs = new BlackScholes(currentSpot, leg.strike, timeToExpiry, marketData.riskFreeRate, leg.impliedVolatility);
-                const currentPrice = leg.optionType === 'Call' ? bs.callPrice() : bs.putPrice();
+                const bsResult = calculateBlackScholes({
+                    spotPrice: currentSpot,
+                    strikePrice: leg.strike,
+                    timeToExpiry,
+                    riskFreeRate: percentToDecimal(marketData.riskFreeRate),
+                    volatility: percentToDecimal(leg.impliedVolatility),
+                    optionType: leg.optionType === 'Call' ? 'call' : 'put'
+                });
+                const currentPrice = bsResult.optionPrice;
 
                 if (leg.quantity > 0) {
                     pnlTodayPoints += (currentPrice - leg.tradePrice) * leg.quantity;
@@ -202,8 +209,15 @@ const PayoffChart: React.FC<PayoffChartProps> = ({ legs, marketData, multiplier 
 
             const timeToExpiry = getTimeToExpiry(leg.expiryDate);
             if (timeToExpiry > 0) {
-                const bs = new BlackScholes(currentSpot, leg.strike, timeToExpiry, marketData.riskFreeRate, leg.impliedVolatility);
-                const currentPrice = leg.optionType === 'Call' ? bs.callPrice() : bs.putPrice();
+                const bsResult = calculateBlackScholes({
+                    spotPrice: currentSpot,
+                    strikePrice: leg.strike,
+                    timeToExpiry,
+                    riskFreeRate: percentToDecimal(marketData.riskFreeRate),
+                    volatility: percentToDecimal(leg.impliedVolatility),
+                    optionType: leg.optionType === 'Call' ? 'call' : 'put'
+                });
+                const currentPrice = bsResult.optionPrice;
 
                 if (leg.quantity > 0) {
                     pnlTodayPoints += (currentPrice - leg.tradePrice) * leg.quantity;

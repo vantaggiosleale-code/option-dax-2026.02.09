@@ -2,7 +2,7 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { useStructures } from '../hooks/useStructures';
 import { Structure, MarketData, CalculatedGreeks, Settings } from '../types';
-import { BlackScholes, getTimeToExpiry } from '../services/blackScholes';
+import { calculateBlackScholes, getTimeToExpiry, percentToDecimal } from '../../../shared/blackScholes';
 import { PlusIcon, ArchiveIcon, PortfolioIcon, EditIcon, TrashIcon, CloudDownloadIcon } from './icons';
 
 import { GraphicModal } from './GraphicModal';
@@ -23,8 +23,15 @@ const calculateTotalGreeks = (structure: Structure, marketData: MarketData): Cal
 
     return activeLegs.reduce((acc, leg) => {
         const timeToExpiry = getTimeToExpiry(leg.expiryDate);
-        const bs = new BlackScholes(marketData.daxSpot, leg.strike, timeToExpiry, marketData.riskFreeRate, leg.impliedVolatility);
-        const greeks = leg.optionType === 'Call' ? bs.callGreeks() : bs.putGreeks();
+        const bsResult = calculateBlackScholes({
+            spotPrice: marketData.daxSpot,
+            strikePrice: leg.strike,
+            timeToExpiry,
+            riskFreeRate: percentToDecimal(marketData.riskFreeRate),
+            volatility: percentToDecimal(leg.impliedVolatility),
+            optionType: leg.optionType === 'Call' ? 'call' : 'put'
+        });
+        const greeks = { delta: bsResult.delta, gamma: bsResult.gamma, theta: bsResult.theta, vega: bsResult.vega };
         
         acc.delta += greeks.delta * leg.quantity;
         acc.gamma += greeks.gamma * leg.quantity;
@@ -69,8 +76,15 @@ const calculateUnrealizedPnlForStructure = (structure: Structure, marketData: Ma
             // Calculate theoretical price with Black-Scholes
             const timeToExpiry = getTimeToExpiry(leg.expiryDate);
             if (timeToExpiry > 0) {
-                const bs = new BlackScholes(marketData.daxSpot, leg.strike, timeToExpiry, marketData.riskFreeRate, leg.impliedVolatility);
-                currentPrice = leg.optionType === 'Call' ? bs.callPrice() : bs.putPrice();
+                const bsResult = calculateBlackScholes({
+                    spotPrice: marketData.daxSpot,
+                    strikePrice: leg.strike,
+                    timeToExpiry,
+                    riskFreeRate: percentToDecimal(marketData.riskFreeRate),
+                    volatility: percentToDecimal(leg.impliedVolatility),
+                    optionType: leg.optionType === 'Call' ? 'call' : 'put'
+                });
+                currentPrice = bsResult.optionPrice;
             } else {
                 currentPrice = leg.optionType === 'Call'
                     ? Math.max(0, marketData.daxSpot - leg.strike)
