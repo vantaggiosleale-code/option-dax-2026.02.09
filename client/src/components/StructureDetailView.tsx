@@ -715,28 +715,66 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
                                     </div>
                                 </div>
                                 <div>
-                                    <label className="text-xs font-medium text-gray-400" htmlFor={`vi-slider-${leg.id}`}>Volatilità Implicita (%)</label>
-                                    <div className="flex items-center space-x-2 mt-1">
-                                        <input
-                                            type="text"
-                                            id={`vi-input-${leg.id}`}
-                                            value={ivKey in localInputValues ? localInputValues[ivKey] : (leg.impliedVolatility ?? '')}
-                                            onChange={e => handleNumericInputChange(leg.id, 'impliedVolatility', e.target.value)}
-                                            onBlur={() => handleNumericInputBlur(leg.id, 'impliedVolatility')}
-                                            className={`bg-gray-600 border-gray-500 rounded p-1 text-sm w-20 text-center text-white ${disabledClass}`}
-                                            disabled={isReadOnly}
-                                        />
-                                        <input
-                                            type="range"
-                                            id={`vi-slider-${leg.id}`}
-                                            min="5"
-                                            max="60"
-                                            step="0.1"
-                                            value={leg.impliedVolatility}
-                                            onChange={e => handleLegChange(leg.id, 'impliedVolatility', parseFloat(e.target.value))}
-                                            className={`w-full h-2 bg-gray-800 rounded-lg appearance-none cursor-pointer accent-accent ${disabledClass}`}
-                                            disabled={isReadOnly}
-                                        />
+                                    <label className="text-xs font-medium text-gray-400">Volatilità Implicita (%)</label>
+                                    <div className="mt-1">
+                                        {(() => {
+                                            const isLegClosed = leg.closingPrice !== null && leg.closingPrice !== undefined;
+                                            
+                                            if (isLegClosed) {
+                                                // Gamba chiusa: mostra messaggio
+                                                return (
+                                                    <div className="bg-gray-700 border border-gray-600 rounded p-2 text-sm text-gray-400 italic">
+                                                        VI non applicabile (gamba chiusa)
+                                                    </div>
+                                                );
+                                            }
+                                            
+                                            // Gamba aperta: calcola VI automaticamente dal prezzo di apertura
+                                            const timeToExpiry = getTimeToExpiry(leg.expiryDate);
+                                            const riskFreeRate = localStructure.riskFreeRate ? parseFloat(localStructure.riskFreeRate) : 0.02;
+                                            
+                                            let calculatedIV: number | null = null;
+                                            let converged = false;
+                                            
+                                            if (timeToExpiry > 0 && leg.tradePrice && leg.tradePrice > 0) {
+                                                try {
+                                                    const ivResult = calculateImpliedVolatility({
+                                                        targetPrice: leg.tradePrice,
+                                                        spotPrice: marketData.daxSpot,
+                                                        strikePrice: leg.strike,
+                                                        timeToExpiry,
+                                                        riskFreeRate: percentToDecimal(riskFreeRate),
+                                                        optionType: leg.optionType === 'Call' ? 'call' : 'put'
+                                                    });
+                                                    calculatedIV = ivResult.impliedVolatility;
+                                                    converged = ivResult.converged;
+                                                    
+                                                    // Aggiorna automaticamente il valore nel leg se è cambiato
+                                                    if (converged && calculatedIV !== null && Math.abs(calculatedIV - leg.impliedVolatility) > 0.01) {
+                                                        handleLegChange(leg.id, 'impliedVolatility', calculatedIV);
+                                                    }
+                                                } catch (error) {
+                                                    console.error('Errore calcolo VI:', error);
+                                                }
+                                            }
+                                            
+                                            return (
+                                                <div className="bg-gray-700 border border-gray-600 rounded p-2 text-sm">
+                                                    {calculatedIV !== null && converged ? (
+                                                        <div className="flex items-center justify-between">
+                                                            <span className="text-white font-medium">{calculatedIV.toFixed(2)}%</span>
+                                                            <span className="text-green-400 text-xs">✓ Calcolata</span>
+                                                        </div>
+                                                    ) : (
+                                                        <div className="text-gray-400 italic">
+                                                            {leg.tradePrice && leg.tradePrice > 0 
+                                                                ? 'Calcolo non convergente'
+                                                                : 'Inserisci prezzo apertura'}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            );
+                                        })()}
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-2 gap-2">

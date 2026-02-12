@@ -962,3 +962,13 @@
 - [x] Tutti i 9 test passano con successo
 - [x] Vega verificato con errore quasi zero (1.4e-14)
 - [x] Rho verificato con errore 5% (entro tolleranza)
+
+## UI Improvements - Strike Menu e Volatilità Implicita
+- [x] Cambiare colore testo strike nel menu a tendina da nero a bianco
+- [x] Rimuovere slider manuale "Volatilità Implicita (%)"
+- [x] Implementare calcolatore automatico VI usando prezzo di apertura
+- [x] Usare metodo Newton-Raphson per calcolo VI inverso
+- [x] Mostrare VI calcolata in modalità read-only per gambe aperte
+- [x] "Spegnere" calcolatore VI per gambe chiuse (mostra "VI non applicabile")
+- [ ] Testare calcolo VI con diversi prezzi di apertura su gambe aperte
+- [ ] Verificare che VI si aggiorni quando cambio prezzo apertura

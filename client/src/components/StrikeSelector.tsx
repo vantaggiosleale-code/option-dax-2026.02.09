@@ -155,7 +155,7 @@ const StrikeSelector: React.FC<StrikeSelectorProps> = ({ value, onChange, spotPr
                             key={strike}
                             data-strike={strike} // Added for querySelector
                             style={getStrikeStyle(strike, spotPrice, optionType)}
-                            className={`px-3 py-2 cursor-pointer hover:bg-accent ${value === strike ? 'bg-accent/70' : ''}`}
+                            className={`px-3 py-2 cursor-pointer hover:bg-accent text-white ${value === strike ? 'bg-accent/70' : ''}`}
                             onClick={() => handleSelect(strike)}
                             role="option"
                             aria-selected={value === strike}
