@@ -1005,3 +1005,10 @@
 - [x] Testato che riskFreeRate sia ora corretto (0.02 invece di 0.0002)
 - [x] Rimossi console.log di debug
 - [x] Verificato che VI calcolata sia più accurata (differenza residua dovuta a Spot DAX diverso)
+
+## 🔴 BUG CRITICO: P&L e Greche non si aggiornano dinamicamente (RISOLTO)
+- [x] Problema: Quando cambi VI default nelle impostazioni, il Prezzo Teorico si aggiorna ma P&L e Greche rimangono fissi
+- [x] Causa: P&L e Greche usavano leg.impliedVolatility (valore salvato nel database) invece di VI default dalle impostazioni
+- [x] Soluzione: Modificato calculatedGreeks e calculatedPnl per usare userSettings.defaultVolatility invece di leg.impliedVolatility
+- [x] Modifiche: client/src/components/StructureDetailView.tsx righe 329 e 393
+- [x] Risultato: Ora Prezzo Teorico, Greche e P&L si aggiornano tutti insieme quando cambi VI default

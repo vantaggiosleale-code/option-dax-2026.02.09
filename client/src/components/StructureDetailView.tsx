@@ -324,6 +324,9 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
         const openLegs = localStructure.legs.filter(leg => leg.closingPrice === null || leg.closingPrice === undefined);
 
         const riskFreeRate = localStructure.riskFreeRate ? parseFloat(localStructure.riskFreeRate) : 0.02;
+        // IMPORTANTE: Usa VI default dalle impostazioni per calcolare Greche in tempo reale
+        // NON usare leg.impliedVolatility (che è calcolata dal prezzo reale) per evitare valori statici
+        const defaultVolatility = userSettings?.defaultVolatility ? parseFloat(userSettings.defaultVolatility) : 0.18;
         const legGreeks = openLegs.map(leg => {
             const timeToExpiry = getTimeToExpiry(leg.expiryDate);
             const bsResult = calculateBlackScholes({
@@ -331,7 +334,7 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
                 strikePrice: leg.strike,
                 timeToExpiry,
                 riskFreeRate: percentToDecimal(riskFreeRate),
-                volatility: percentToDecimal(leg.impliedVolatility),
+                volatility: defaultVolatility, // Usa VI default invece di leg.impliedVolatility
                 optionType: leg.optionType === 'Call' ? 'call' : 'put'
             });
             const greeks = { delta: bsResult.delta, gamma: bsResult.gamma, theta: bsResult.theta, vega: bsResult.vega };
@@ -355,7 +358,7 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
         }, { ...initialGreeks });
 
         return { legGreeks, totalGreeks };
-    }, [localStructure, marketData]);
+    }, [localStructure, marketData, userSettings]);
 
     const calculatedPnl = useMemo(() => {
         if (!localStructure) return { legPnl: [], totalRealizedNet: 0, totalUnrealizedNet: 0, grandTotalNet: 0, totalRealizedGross: 0, totalUnrealizedGross: 0, grandTotalGross: 0, totalRealizedCommission: 0, totalUnrealizedCommission: 0, grandTotalCommission: 0 };
@@ -385,12 +388,15 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
                 let currentPrice = 0;
                 if (timeToExpiry > 0) {
                      const riskFreeRate = localStructure.riskFreeRate ? parseFloat(localStructure.riskFreeRate) : 0.02;
+                     // IMPORTANTE: Usa VI default dalle impostazioni per calcolare P&L in tempo reale
+                     // NON usare leg.impliedVolatility (che è calcolata dal prezzo reale) per evitare valori statici
+                     const defaultVolatility = userSettings?.defaultVolatility ? parseFloat(userSettings.defaultVolatility) : 0.18;
                      const bsResult = calculateBlackScholes({
                          spotPrice: marketData.daxSpot,
                          strikePrice: leg.strike,
                          timeToExpiry,
                          riskFreeRate: percentToDecimal(riskFreeRate),
-                         volatility: percentToDecimal(leg.impliedVolatility),
+                         volatility: defaultVolatility, // Usa VI default invece di leg.impliedVolatility
                          optionType: leg.optionType === 'Call' ? 'call' : 'put'
                      });
                      currentPrice = bsResult.optionPrice;
@@ -441,7 +447,7 @@ const StructureDetailView: React.FC<StructureDetailViewProps> = ({ structureId, 
 
         return { legPnl, totalRealizedNet, totalUnrealizedNet, grandTotalNet, totalRealizedGross, totalUnrealizedGross, grandTotalGross, totalRealizedCommission, totalUnrealizedCommission, grandTotalCommission };
 
-    }, [localStructure, marketData, settings]);
+    }, [localStructure, marketData, settings, userSettings]);
 
     const handleSpotChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
